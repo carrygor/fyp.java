@@ -1,0 +1,13 @@
+# Package Files #
+*.jar
+*.war
+*.ear
+*.class
+logs/
+*.iml
+.idea/
+*target/
+*out/
+!lib/**
+velocity.*
+hs_err*.log*
