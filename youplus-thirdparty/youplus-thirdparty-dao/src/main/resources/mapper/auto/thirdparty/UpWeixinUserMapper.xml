@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.youplus.thirdparty.dao.auto.UpWeixinUserMapper">
+<!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 -->
+	<!-- 开启二级缓存 -->
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.youplus.model.auto.entity.thirdparty.UpWeixinUser">
+		<id column="id" property="id" />
+		<result column="unionid" property="unionid" />
+		<result column="youplus_openid" property="youplusOpenid" />
+		<result column="webapp_openid" property="webappOpenid" />
+		<result column="thirdparty_appid" property="thirdpartyAppid" />
+		<result column="thirdparty_openid" property="thirdpartyOpenid" />
+		<result column="xcx_openid" property="xcxOpenid" />
+		<result column="youplus_access_token" property="youplusAccessToken" />
+		<result column="thirdparty_access_token" property="thirdpartyAccessToken" />
+		<result column="webapp_access_token" property="webappAccessToken" />
+		<result column="xcx_access_token" property="xcxAccessToken" />
+		<result column="subscribe_time" property="subscribeTime" />
+		<result column="head_img" property="headImg" />
+		<result column="sex" property="sex" />
+		<result column="nickname" property="nickname" />
+		<result column="profile_city" property="profileCity" />
+		<result column="profile_country" property="profileCountry" />
+		<result column="profile_province" property="profileProvince" />
+		<result column="last_city" property="lastCity" />
+		<result column="last_country" property="lastCountry" />
+		<result column="last_province" property="lastProvince" />
+		<result column="last_district" property="lastDistrict" />
+		<result column="last_street" property="lastStreet" />
+		<result column="last_detail" property="lastDetail" />
+		<result column="last_lat" property="lastLat" />
+		<result column="last_lng" property="lastLng" />
+		<result column="last_time" property="lastTime" />
+		<result column="privilege" property="privilege" />
+		<result column="add_time" property="addTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="is_td" property="isTd" />
+		<result column="is_subscribe" property="isSubscribe" />
+		<result column="information_json" property="informationJson" />
+		<result column="mobile" property="mobile" />
+		<result column="email" property="email" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, unionid, youplus_openid AS youplusOpenid, webapp_openid AS webappOpenid, thirdparty_appid AS thirdpartyAppid, thirdparty_openid AS thirdpartyOpenid, xcx_openid AS xcxOpenid, youplus_access_token AS youplusAccessToken, thirdparty_access_token AS thirdpartyAccessToken, webapp_access_token AS webappAccessToken, xcx_access_token AS xcxAccessToken, subscribe_time AS subscribeTime, head_img AS headImg, sex, nickname, profile_city AS profileCity, profile_country AS profileCountry, profile_province AS profileProvince, last_city AS lastCity, last_country AS lastCountry, last_province AS lastProvince, last_district AS lastDistrict, last_street AS lastStreet, last_detail AS lastDetail, last_lat AS lastLat, last_lng AS lastLng, last_time AS lastTime, privilege, add_time AS addTime, update_time AS updateTime, is_td AS isTd, is_subscribe AS isSubscribe, information_json AS informationJson, mobile, email
+    </sql>
+
+</mapper>

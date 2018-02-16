@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- ApplicationContext -->
+    <bean id="ddzhuliWeixinConfig" class="cn.com.youplus.model.contants.beans.WeixinConfig" >
+        <property name="account" value="${weixin_ddzhuli_account}" />
+        <property name="appid" value="${weixin_ddzhuli_appid}" />
+        <property name="appsecret" value="${weixin_ddzhuli_appsecret}" />
+        <property name="mchId" value="${weixin_ddzhuli_mchid}" />
+        <property name="paySecret" value="${weixin_ddzhuli_paySecret}" />
+        <property name="pk12Path" value="${weixin_ddzhuli_pk12_path}" />
+    </bean>
+
+</beans>

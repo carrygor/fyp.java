@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.youplus.apps.dao.auto.UpAppsQuestionnaireThemeMapper">
+<!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 -->
+	<!-- 开启二级缓存 -->
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.youplus.model.auto.entity.apps.UpAppsQuestionnaireTheme">
+		<id column="id" property="id" />
+		<result column="bkg_img" property="bkgImg" />
+		<result column="icon_img" property="iconImg" />
+		<result column="theme_color" property="themeColor" />
+		<result column="selected_color" property="selectedColor" />
+		<result column="unselected_color" property="unselectedColor" />
+		<result column="bkg_color" property="bkgColor" />
+		<result column="start_img" property="startImg" />
+		<result column="end_img" property="endImg" />
+		<result column="banner_img" property="bannerImg" />
+		<result column="already_submit_img" property="alreadySubmitImg" />
+		<result column="select_icon" property="selectIcon" />
+		<result column="unselect_icon" property="unselectIcon" />
+		<result column="version" property="version" />
+		<result column="logic_delete" property="logicDelete" />
+		<result column="add_time" property="addTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, bkg_img AS bkgImg, icon_img AS iconImg, theme_color AS themeColor, selected_color AS selectedColor, unselected_color AS unselectedColor, bkg_color AS bkgColor, start_img AS startImg, end_img AS endImg, banner_img AS bannerImg, already_submit_img AS alreadySubmitImg, select_icon AS selectIcon, unselect_icon AS unselectIcon, version, logic_delete AS logicDelete, add_time AS addTime, update_time AS updateTime
+    </sql>
+
+</mapper>

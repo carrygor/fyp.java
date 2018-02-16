@@ -1,0 +1,35 @@
+{
+  "table": "UpAppsAnswerSheet",
+  "columns": [
+    {
+      "name": "score",
+      "type": "String"
+    },
+    {
+      "name": "total",
+      "function": "SUM(%s)",
+      "type": "Integer"
+    }
+  ],
+  "params": [
+    {
+
+    },
+    {
+
+    }
+  ],
+  "filters": {
+    "tenants_company_id": {
+      "operation": "eq",
+      "from": "parameter",
+      "value": "tenantsCompanyId"
+    }
+  },
+  "orderBy": [
+    {
+      "field": "add_time",
+      "isAsc": true
+    }
+  ]
+}

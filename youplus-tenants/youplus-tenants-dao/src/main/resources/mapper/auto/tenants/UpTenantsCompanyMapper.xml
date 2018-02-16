@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.youplus.tenants.dao.auto.UpTenantsCompanyMapper">
+<!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 -->
+	<!-- 开启二级缓存 -->
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.youplus.model.auto.entity.tenants.UpTenantsCompany">
+		<id column="id" property="id" />
+		<result column="tenants_type" property="tenantsType" />
+		<result column="name" property="name" />
+		<result column="company_name" property="companyName" />
+		<result column="address" property="address" />
+		<result column="province" property="province" />
+		<result column="city" property="city" />
+		<result column="district" property="district" />
+		<result column="phone" property="phone" />
+		<result column="hangye" property="hangye" />
+		<result column="auth_expired_time" property="authExpiredTime" />
+		<result column="auth_start_time" property="authStartTime" />
+		<result column="logo_img" property="logoImg" />
+		<result column="contact_name" property="contactName" />
+		<result column="domain_name" property="domainName" />
+		<result column="tenants_user_id" property="tenantsUserId" />
+		<result column="max_site_num" property="maxSiteNum" />
+		<result column="max_user_num" property="maxUserNum" />
+		<result column="max_report_num" property="maxReportNum" />
+		<result column="function_str" property="functionStr" />
+		<result column="version" property="version" />
+		<result column="logic_delete" property="logicDelete" />
+		<result column="add_time" property="addTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="template_json" property="templateJson" />
+		<result column="api_secret" property="apiSecret" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tenants_type AS tenantsType, name, company_name AS companyName, address, province, city, district, phone, hangye, auth_expired_time AS authExpiredTime, auth_start_time AS authStartTime, logo_img AS logoImg, contact_name AS contactName, domain_name AS domainName, tenants_user_id AS tenantsUserId, max_site_num AS maxSiteNum, max_user_num AS maxUserNum, max_report_num AS maxReportNum, function_str AS functionStr, version, logic_delete AS logicDelete, add_time AS addTime, update_time AS updateTime, template_json AS templateJson, api_secret AS apiSecret
+    </sql>
+
+</mapper>

@@ -1,0 +1,72 @@
+package ${package};
+
+import java.io.Serializable;
+import com.alibaba.fastjson.JSONObject;
+import cn.com.xiaohanyu.echarts4j.model.base.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * <p>
+#foreach($comment in ${comments})
+ * ${comment}
+#end
+ * </p>
+ *
+ * @author 小汉语
+ */
+public class ${objectName} implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+## ----------  BEGIN 字段循环遍历 START  ----------
+#foreach($field in ${fields})
+#if(${field.defaultValue})
+    private ${field.type} ${field.name} = ${field.defaultValue};
+
+#else
+    private ${field.type} ${field.name};
+
+#end
+#end
+## ----------  BEGIN 字段循环遍历 END    ----------
+
+## ----------  BEGIN GETTER&SETTER 循环遍历 START  ----------
+#foreach($field in ${fields})
+#if(${field.type.equals("boolean")})
+    #set($getprefix="is")
+#else
+    #set($getprefix="get")
+#end
+    public ${field.type} ${getprefix}${field.capitalName}(){
+        return ${field.name};
+    }
+
+    public ${objectName} set${field.capitalName}(${field.type} ${field.name}) {
+        this.${field.name} = ${field.name};
+        return this;
+    }
+
+#end
+## ----------  BEGIN GETTER&SETTER 循环遍历 END    ----------
+    public Object toMap() {
+        Map<String, Object> map = new HashMap<String, Object>();
+#foreach($field in ${fields})
+#if(${field.isDefalutType})
+        if (${field.name} != null)  {
+            map.put("${field.name}", ${field.name});
+        }
+#else
+        if (${field.name} != null)  {
+            map.put("${field.name}", ${field.name}.toMap());
+        }
+#end
+#end
+        return map;
+    }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
+    }
+}

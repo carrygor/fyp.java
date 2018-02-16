@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.youplus.notification.dao.auto.UpNotificationSmsRecordMapper">
+<!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 -->
+	<!-- 开启二级缓存 -->
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.youplus.model.auto.entity.notification.UpNotificationSmsRecord">
+		<result column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="user_type" property="userType" />
+		<result column="template_id" property="templateId" />
+		<result column="code" property="code" />
+		<result column="sms_type" property="smsType" />
+		<result column="send_json" property="sendJson" />
+		<result column="result" property="result" />
+		<result column="is_consume" property="isConsume" />
+		<result column="add_time" property="addTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="job_id" property="jobId" />
+		<result column="phone" property="phone" />
+		<result column="cookie" property="cookie" />
+		<result column="openid" property="openid" />
+		<result column="ip" property="ip" />
+		<result column="company_id" property="companyId" />
+		<result column="questionnaire_id" property="questionnaireId" />
+		<result column="day" property="day" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id AS userId, user_type AS userType, template_id AS templateId, code, sms_type AS smsType, send_json AS sendJson, result, is_consume AS isConsume, add_time AS addTime, update_time AS updateTime, job_id AS jobId, phone, cookie, openid, ip, company_id AS companyId, questionnaire_id AS questionnaireId, day
+    </sql>
+
+</mapper>

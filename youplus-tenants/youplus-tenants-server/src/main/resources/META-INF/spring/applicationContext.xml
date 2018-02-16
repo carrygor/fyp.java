@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+          http://www.springframework.org/schema/task
+          http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <beans>
+        <bean id="propertyConfig" class="cn.com.youplus.common.util.plugin.EncryptPropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:dubbo.properties</value>
+                    <value>classpath:dubbo-master.properties</value>
+                    <value>classpath*:config/weixin.properties</value>
+                    <value>classpath*:config/system.properties</value>
+                    <value>classpath*:config/message_queue.properties</value>
+                    <!--<value>classpath:ehcache.properties</value>-->
+                    <!-- 以下的公共配置需要去youplus-common里查找 -->
+                    <value>classpath*:config/message_queue.properties</value>
+                    <!--<value>classpath*:config/weixin.properties</value>
+                    <value>classpath*:config/system.properties</value>-->
+                </list>
+            </property>
+        </bean>
+    </beans>
+
+    <beans profile="slave">
+        <bean id="propertyConfig4Slave" class="cn.com.youplus.common.util.plugin.EncryptPropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:dubbo-slave.properties</value>
+                </list>
+            </property>
+        </bean>
+    </beans>
+
+    <beans>
+        <!-- Spring容器初始化完成监听器 -->
+        <bean class="cn.com.youplus.tenants.server.interceptor.TenantsApplicationContextListener" />
+        <!-- ApplicationContext -->
+        <bean id="springContextUtil" class="cn.com.youplus.common.util.SpringContextUtil" />
+        <!-- 开启spring task -->
+        <task:annotation-driven/>
+
+        <import resource="classpath:META-INF/spring/spring-dubbo-consumer.xml" />
+        <import resource="classpath*:META-INF/common/applicationContext-weixin-config.xml" />
+        <import resource="classpath*:META-INF/common/applicationContext-aliyun-tablestorage.xml" />
+        <import resource="classpath*:META-INF/common/applicationContext-system.xml" />
+        <import resource="classpath*:META-INF/common/applicationContext-aliyun-tablestorage.xml" />
+        <!-- 以下需要去Common工程中查找 -->
+        <!--<import resource="classpath*:META-INF/common/applicationContext-weixin.xml" />
+        <import resource="classpath*:META-INF/common/applicationContext-system.xml" />-->
+
+        <!-- OSS实例 -->
+        <!-- 都采用默认配置 -->
+        <!-- <bean id="clientConfiguration" class="com.aliyun.oss.ClientConfiguration" />
+
+         <bean id="ossClient" class="com.aliyun.oss.OSSClient" destroy-method="shutdown">
+             <constructor-arg index="0" value="${sys_oss_endpoint}"/>
+             <constructor-arg index="1" value="${sys_oss_accessKeyId}"/>
+             <constructor-arg index="2" value="${sys_oss_accessKeySecret}"/>
+             <constructor-arg index="3" ref="clientConfiguration" />
+         </bean>-->
+
+
+        <!-- 线程池配置 -->
+        <!--<bean id="threadPoolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+            &lt;!&ndash; 线程池维护线程的最少数量 &ndash;&gt;
+            <property name="corePoolSize" value="50"/>
+            &lt;!&ndash;  线程池维护线程的最大数量，默认为Integer.MAX_VALUE &ndash;&gt;
+            <property name="maxPoolSize" value="1000"/>
+            &lt;!&ndash; 线程池所使用的缓冲队列，一般需要设置值>=notifyScheduledMainExecutor.maxNum；默认为Integer.MAX_VALUE &ndash;&gt;
+            <property name="queueCapacity" value="20000"/>
+            &lt;!&ndash; 线程池维护线程所允许的空闲时间，默认为60s &ndash;&gt;
+            <property name="keepAliveSeconds" value="300"/>
+            &lt;!&ndash; 线程池对拒绝任务（无线程可用）的处理策略，目前只支持AbortPolicy、CallerRunsPolicy；默认为后者 &ndash;&gt;
+            <property name="rejectedExecutionHandler">
+                &lt;!&ndash; AbortPolicy:直接抛出java.util.concurrent.RejectedExecutionException异常 &ndash;&gt;
+                &lt;!&ndash; CallerRunsPolicy:主线程直接执行该任务，执行完之后尝试添加下一个任务到线程池中，可以有效降低向线程池内添加任务的速度 &ndash;&gt;
+                &lt;!&ndash; DiscardOldestPolicy:抛弃旧的任务、暂不支持；会导致被丢弃的任务无法再次被执行 &ndash;&gt;
+                &lt;!&ndash; DiscardPolicy:抛弃当前任务、暂不支持；会导致被丢弃的任务无法再次被执行 &ndash;&gt;
+                <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+            </property>
+        </bean>-->
+        <aop:aspectj-autoproxy expose-proxy="true"/>
+
+        <import resource="spring-shiro.xml" />
+    </beans>
+</beans>

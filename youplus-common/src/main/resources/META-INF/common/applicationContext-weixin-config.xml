@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- ApplicationContext -->
+    <bean id="weixinProperties" class="cn.com.youplus.common.model.resources.WeixinProperties" >
+        <property name="token" value="${weixin.open.token}" />
+        <property name="appid" value="${weixin.open.appid}" />
+        <property name="appsecret" value="${weixin.open.appsecret}" />
+        <property name="encodingAesKey" value="${weixin.open.encoding_aes_key}" />
+        <property name="webappId" value="${weixin.webapp.appid}" />
+        <property name="webappSecret" value="${weixin.webapp.appsecret}" />
+
+        <property name="officialAccountsAppId" value="${weixin.officialAccount.appid}" />
+        <property name="officialAccountsOriginId" value="${weixin.officialAccount.originid}" />
+        <property name="officialAccountsAppSecret" value="${weixin.officialAccount.appsecret}" />
+    </bean>
+
+</beans>

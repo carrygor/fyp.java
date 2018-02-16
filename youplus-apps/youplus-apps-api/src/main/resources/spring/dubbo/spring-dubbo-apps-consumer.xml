@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://code.alibabatech.com/schema/dubbo 
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+		http://www.springframework.org/schema/beans  
+		http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://www.springframework.org/schema/context 
+	 	http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	<dubbo:reference  id="upAppsAnswerSheetItemService"
+					interface="cn.com.youplus.apps.api.auto.UpAppsAnswerSheetItemService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:reference  id="upAppsAnswerSheetService"
+					interface="cn.com.youplus.apps.api.auto.UpAppsAnswerSheetService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:reference  id="upAppsQuestionItemService"
+					interface="cn.com.youplus.apps.api.auto.UpAppsQuestionItemService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:reference  id="upAppsQuestionnaireService"
+					interface="cn.com.youplus.apps.api.auto.UpAppsQuestionnaireService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:reference  id="upAppsQuestionnaireThemeService"
+					interface="cn.com.youplus.apps.api.auto.UpAppsQuestionnaireThemeService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:reference  id="upAppsQuestionService"
+					interface="cn.com.youplus.apps.api.auto.UpAppsQuestionService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:reference  id="upAppsRequestLogService"
+					interface="cn.com.youplus.apps.api.auto.UpAppsRequestLogService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:reference  id="upAppsAnswerSheetViewService"
+					interface="cn.com.youplus.apps.api.auto.UpAppsAnswerSheetViewService"
+					version="${dubbo.interface.version}"/>
+
+	<dubbo:reference  id="upAppsAnswerSheetItemViewService"
+					  interface="cn.com.youplus.apps.api.auto.UpAppsAnswerSheetItemViewService"
+					  version="${dubbo.interface.version}"/>
+
+	<dubbo:reference  id="upAppsAnswerSheetDetailViewService"
+					interface="cn.com.youplus.apps.api.auto.UpAppsAnswerSheetDetailViewService"
+					version="${dubbo.interface.version}"/>
+
+	<dubbo:reference  id="upAppsAnswerSheetItemDetailViewService"
+					interface="cn.com.youplus.apps.api.auto.UpAppsAnswerSheetItemDetailViewService"
+					version="${dubbo.interface.version}"/>
+
+	<dubbo:reference  id="upAppsQuestionnaireAttributeService"
+					  interface="cn.com.youplus.apps.api.auto.UpAppsQuestionnaireAttributeService"
+					  version="${dubbo.interface.version}"/>
+
+	<dubbo:reference  id="upAppsPhoneListService"
+					  interface="cn.com.youplus.apps.api.auto.UpAppsPhoneListService"
+					  version="${dubbo.interface.version}"/>
+
+	<dubbo:reference  id="answerSheetService"
+					  interface="cn.com.youplus.apps.api.common.AnswerSheetService"
+					  version="${dubbo.interface.version}"/>
+
+	<dubbo:reference  id="questionnaireService"
+					  interface="cn.com.youplus.apps.api.common.QuestionnaireService"
+					  version="${dubbo.interface.version}"/>
+
+</beans>

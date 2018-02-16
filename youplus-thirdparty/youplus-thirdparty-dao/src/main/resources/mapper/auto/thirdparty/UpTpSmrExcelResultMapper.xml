@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.youplus.thirdparty.dao.auto.UpTpSmrExcelResultMapper">
+<!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 -->
+	<!-- 开启二级缓存 -->
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.youplus.model.auto.entity.thirdparty.UpTpSmrExcelResult">
+		<id column="id" property="id" />
+		<result column="level" property="level" />
+		<result column="report_id" property="reportId" />
+		<result column="c_id" property="cId" />
+		<result column="c_name" property="cName" />
+		<result column="time_slot" property="timeSlot" />
+		<result column="province" property="province" />
+		<result column="district" property="district" />
+		<result column="district_code" property="districtCode" />
+		<result column="district_score" property="districtScore" />
+		<result column="gas_name" property="gasName" />
+		<result column="gas_code" property="gasCode" />
+		<result column="rank" property="rank" />
+		<result column="total_score" property="totalScore" />
+		<result column="yzzt_score" property="yzztScore" />
+		<result column="jyfw_score" property="jyfwScore" />
+		<result column="bld_score" property="bldScore" />
+		<result column="wsj_score" property="wsjScore" />
+		<result column="wg_score" property="wgScore" />
+		<result column="fw_score" property="fwScore" />
+		<result column="ws_score" property="wsScore" />
+		<result column="nps_score" property="npsScore" />
+		<result column="nps_score_json" property="npsScoreJson" />
+		<result column="version" property="version" />
+		<result column="logic_delete" property="logicDelete" />
+		<result column="sort" property="sort" />
+		<result column="add_time" property="addTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, level, report_id AS reportId, c_id AS cId, c_name AS cName, time_slot AS timeSlot, province, district, district_code AS districtCode, district_score AS districtScore, gas_name AS gasName, gas_code AS gasCode, rank, total_score AS totalScore, yzzt_score AS yzztScore, jyfw_score AS jyfwScore, bld_score AS bldScore, wsj_score AS wsjScore, wg_score AS wgScore, fw_score AS fwScore, ws_score AS wsScore, nps_score AS npsScore, nps_score_json AS npsScoreJson, version, logic_delete AS logicDelete, sort, add_time AS addTime, update_time AS updateTime
+    </sql>
+
+</mapper>

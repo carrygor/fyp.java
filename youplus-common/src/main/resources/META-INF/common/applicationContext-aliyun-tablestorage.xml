@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="tsClientConfiguration" class="com.alicloud.openservices.tablestore.ClientConfiguration" >
+        <property name="connectionTimeoutInMillisecond" value="5000" />
+        <property name="socketTimeoutInMillisecond" value="5000" />
+    </bean>
+
+    <bean id="syncClient" class="com.alicloud.openservices.tablestore.SyncClient" >
+        <constructor-arg index="0" value="${aliyun.table.endpoint}"/>
+        <constructor-arg index="1" value="${aliyun.mq.access_key_id}"/>
+        <constructor-arg index="2" value="${aliyun.mq.access_key_secret}"/>
+        <constructor-arg index="3" value="${aliyun.table.instance}"/>
+        <constructor-arg index="4" ref="tsClientConfiguration"/>
+    </bean>
+
+    <bean id="tableStoreService" class="cn.com.youplus.common.tablestore.TableStoreServiceImpl" >
+        <property name="syncClient" ref="syncClient"/>
+    </bean>
+</beans>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.youplus.thirdparty.dao.auto.UpWeixinMessageLogMapper">
+<!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 -->
+	<!-- 开启二级缓存 -->
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.youplus.model.auto.entity.thirdparty.UpWeixinMessageLog">
+		<id column="id" property="id" />
+		<result column="appid" property="appid" />
+		<result column="create_time" property="createTime" />
+		<result column="info_type" property="infoType" />
+		<result column="authorizer_appid" property="authorizerAppid" />
+		<result column="authorization_code" property="authorizationCode" />
+		<result column="authorization_code_expired_time" property="authorizationCodeExpiredTime" />
+		<result column="pre_auth_code" property="preAuthCode" />
+		<result column="add_time" property="addTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="component_verify_ticket" property="componentVerifyTicket" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, appid, create_time AS createTime, info_type AS infoType, authorizer_appid AS authorizerAppid, authorization_code AS authorizationCode, authorization_code_expired_time AS authorizationCodeExpiredTime, pre_auth_code AS preAuthCode, add_time AS addTime, update_time AS updateTime, component_verify_ticket AS componentVerifyTicket
+    </sql>
+
+</mapper>

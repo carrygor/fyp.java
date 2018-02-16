@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://code.alibabatech.com/schema/dubbo 
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+		http://www.springframework.org/schema/beans  
+		http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://www.springframework.org/schema/context 
+	 	http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	<dubbo:service  ref="upNotificationEmailRecordService"
+					interface="cn.com.youplus.notification.api.auto.UpNotificationEmailRecordService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:service  ref="upNotificationMessageQueueRecordService"
+					interface="cn.com.youplus.notification.api.auto.UpNotificationMessageQueueRecordService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:service  ref="upNotificationRequestLogService"
+					interface="cn.com.youplus.notification.api.auto.UpNotificationRequestLogService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:service  ref="upNotificationSmsRecordService"
+					interface="cn.com.youplus.notification.api.auto.UpNotificationSmsRecordService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:service  ref="upNotificationWeixinTemplateRecordService"
+					interface="cn.com.youplus.notification.api.auto.UpNotificationWeixinTemplateRecordService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:service  ref="locationBaseService"
+					interface="cn.com.youplus.notification.api.LocationBaseService"
+					version="${dubbo.interface.version}"
+	/>
+
+	<dubbo:service  ref="smsService"
+					interface="cn.com.youplus.notification.api.SmsService"
+					version="${dubbo.interface.version}"
+	/>
+
+
+</beans>

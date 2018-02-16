@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.youplus.tenants.dao.auto.UpTenantsTaskMapper">
+<!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 -->
+	<!-- 开启二级缓存 -->
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.youplus.model.auto.entity.tenants.UpTenantsTask">
+		<result column="id" property="id" />
+		<result column="tenants_company_id" property="tenantsCompanyId" />
+		<result column="task_type" property="taskType" />
+		<result column="status" property="status" />
+		<result column="total_num" property="totalNum" />
+		<result column="current_completed_num" property="currentCompletedNum" />
+		<result column="last_message" property="lastMessage" />
+		<result column="messages_json" property="messagesJson" />
+		<result column="download" property="download" />
+		<result column="add_time" property="addTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="questionnaire_id" property="questionnaireId" />
+		<result column="quick_tag" property="quickTag" />
+		<result column="region_filter" property="regionFilter" />
+		<result column="version" property="version" />
+		<result column="logic_delete" property="logicDelete" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tenants_company_id AS tenantsCompanyId, task_type AS taskType, status, total_num AS totalNum, current_completed_num AS currentCompletedNum, last_message AS lastMessage, messages_json AS messagesJson, download, add_time AS addTime, update_time AS updateTime, questionnaire_id AS questionnaireId, quick_tag AS quickTag, region_filter AS regionFilter, version, logic_delete AS logicDelete
+    </sql>
+
+</mapper>

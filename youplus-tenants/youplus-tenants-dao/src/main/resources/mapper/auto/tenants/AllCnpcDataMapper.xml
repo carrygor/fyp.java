@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.youplus.tenants.dao.auto.AllCnpcDataMapper">
+<!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 -->
+	<!-- 开启二级缓存 -->
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.youplus.model.auto.entity.tenants.AllCnpcData">
+		<result column="id" property="id" />
+		<result column="visit_time" property="visitTime" />
+		<result column="province" property="province" />
+		<result column="phone_num" property="phoneNum" />
+		<result column="is_exported" property="isExported" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, visit_time AS visitTime, province, phone_num AS phoneNum, is_exported AS isExported
+    </sql>
+
+</mapper>
