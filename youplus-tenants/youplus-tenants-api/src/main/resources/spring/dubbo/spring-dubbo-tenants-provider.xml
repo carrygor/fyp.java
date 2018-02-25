@@ -45,34 +45,4 @@
 	<dubbo:service  ref="upTenantsUserRegionViewService"
 					  interface="cn.com.youplus.tenants.api.auto.UpTenantsUserRegionViewService"
 					  version="${dubbo.interface.version}"/>
-
-	<dubbo:service  ref="excelService"
-					  interface="cn.com.youplus.tenants.api.common.ExcelService"
-					  version="${dubbo.interface.version}"/>
-
-
-	<dubbo:service  ref="questionnaireSettingService"
-					  interface="cn.com.youplus.tenants.api.common.QuestionnaireSettingService"
-					  version="${dubbo.interface.version}"/>
-
-	<dubbo:service  ref="commonService"
-					  interface="cn.com.youplus.tenants.api.common.CommonService"
-					  version="${dubbo.interface.version}"/>
-
-	<dubbo:service  ref="exportTaskService"
-					  interface="cn.com.youplus.tenants.api.common.ExportTaskService"
-					  version="${dubbo.interface.version}"/>
-
-	<dubbo:service  ref="tsAnswerSheetStatService"
-					  interface="cn.com.youplus.tenants.api.common.TsAnswerSheetStatService"
-					  version="${dubbo.interface.version}"/>
-
-	<dubbo:service  ref="newReportService"
-					  interface="cn.com.youplus.tenants.api.common.NewReportService"
-					  version="${dubbo.interface.version}"/>
-
-	<dubbo:service  ref="productConsumeService"
-					  interface="cn.com.youplus.tenants.api.common.ProductConsumeService"
-					  version="${dubbo.interface.version}"/>
-
 </beans>
