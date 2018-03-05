@@ -1,2 +1,0 @@
-这里的model都是通过generator工具自动生成的。
-不建议直接修改这里的文件，如需更新，需下载最近的option.json到resources的schema/option.json

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- ApplicationContext -->
+    <bean id="aliyunProperties" class="cn.com.carry.common.model.resources.AliyunProperties" >
+        <property name="aliyunMqAccessKeyId" value="${aliyun.mq.access_key_id}" />
+        <property name="aliyunMqAccessKeySecret" value="${aliyun.mq.access_key_secret}" />
+        <property name="aliyunMqBlockOrderTopicName" value="${aliyun.mq.block_order_topic_name}" />
+        <property name="aliyunMqNoneOrderTopicName" value="${aliyun.mq.none_order_topic_name}" />
+        <property name="aliyunMqProviderId" value="${aliyun.mq.provider_id}" />
+        <property name="aliyunMqConsumerId" value="${aliyun.mq.consumer_id}" />
+
+        <property name="aliyunOssBucket" value="${aliyun.oss.bucket}" />
+        <property name="aliyunOssPipeLine" value="${aliyun.oss.pipe_line}" />
+        <property name="aliyunOssRegion" value="${aliyun.oss.region}" />
+        <property name="aliyunOssLocation" value="${aliyun.oss.location}" />
+        <property name="aliyunOssVideoTemplate" value="${aliyun.oss.video_template}" />
+        <property name="aliyunOssAudioTemplate" value="${aliyun.oss.audio_template}" />
+        <property name="aliyunOssEndpoint" value="${aliyun.oss.endpoint}" />
+        <property name="aliyunTableStorageEdpoint" value="${aliyun.table.endpoint}" />
+        <property name="aliyunTableStorageInstance" value="${aliyun.table.instance}" />
+
+        <property name="aliyunLogEndpoint" value="${aliyun.log.endpoint}" />
+        <property name="aliyunLogProjectName" value="${aliyun.log.projectName}" />
+    </bean>
+
+</beans>

@@ -4,24 +4,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.com.youplus</groupId>
-    <artifactId>youplus</artifactId>
+    <groupId>cn.com.carry</groupId>
+    <artifactId>carry</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>youplus-cms</module>
-        <module>youplus-thirdparty</module>
-        <module>youplus-common</module>
-        <module>youplus-model</module>
-        <module>youplus-sdks</module>
-        <module>youplus-tenants</module>
-        <module>youplus-apps</module>
-        <module>youplus-base</module>
-        <module>youplus-notification</module>
+        <module>carry-common</module>
+        <module>carry-model</module>
+        <module>carry-tenants</module>
     </modules>
 
     <packaging>pom</packaging>
-    <name>youplus</name>
-    <url>http://www.youplus.com.cn</url>
+    <name>carry</name>
+    <url>http://www.carry.com.cn</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

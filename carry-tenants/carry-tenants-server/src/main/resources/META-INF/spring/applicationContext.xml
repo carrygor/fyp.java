@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+          http://www.springframework.org/schema/task
+          http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <beans>
+        <bean id="propertyConfig" class="cn.com.carry.common.util.plugin.EncryptPropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:dubbo.properties</value>
+                    <value>classpath:dubbo-master.properties</value>
+                    <value>classpath*:config/system.properties</value>
+                    <!--<value>classpath:ehcache.properties</value>-->
+                    <!-- 以下的公共配置需要去carry-common里查找 -->
+                    <!--<value>classpath*:config/weixin.properties</value>
+                    <value>classpath*:config/system.properties</value>-->
+                </list>
+            </property>
+        </bean>
+    </beans>
+
+    <beans profile="slave">
+        <bean id="propertyConfig4Slave" class="cn.com.carry.common.util.plugin.EncryptPropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:dubbo-slave.properties</value>
+                </list>
+            </property>
+        </bean>
+    </beans>
+
+    <beans>
+        <!-- Spring容器初始化完成监听器 -->
+        <bean class="cn.com.carry.tenants.server.interceptor.TenantsApplicationContextListener" />
+        <!-- ApplicationContext -->
+        <bean id="springContextUtil" class="cn.com.carry.common.util.SpringContextUtil" />
+        <!-- 开启spring task -->
+        <task:annotation-driven/>
+
+        <import resource="classpath:META-INF/spring/spring-dubbo-consumer.xml" />
+        <import resource="classpath*:META-INF/common/applicationContext-system.xml" />
+        <aop:aspectj-autoproxy expose-proxy="true"/>
+
+        <import resource="spring-shiro.xml" />
+    </beans>
+</beans>

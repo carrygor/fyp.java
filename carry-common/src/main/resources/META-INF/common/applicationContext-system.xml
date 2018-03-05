@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- ApplicationContext -->
+    <bean id="systemConfig" class="cn.com.carry.common.model.resources.SystemConfig" >
+        <property name="version" value="${sys_version}" />
+        <property name="majorVersion" value="${sys_major_version}" />
+        <property name="profile" value="${sys_profile}" />
+        <property name="apiUrl" value="${sys_apiUrl}" />
+        <property name="webUrl" value="${sys_webUrl}" />
+        <property name="debug" value="${sys_debug}" />
+        <property name="bypassSecurityCheck" value="${sys_bypassSecurityCheck}" />
+        <property name="appsApi" value="${sys_appsApi}" />
+        <property name="tenantsApi" value="${sys_tenantsApi}" />
+        <property name="cmsApi" value="${sys_cmsApi}" />
+        <property name="thirdpartyApi" value="${sys_thirdpartyApi}" />
+        <property name="appUrl" value="${app_url}" />
+
+    </bean>
+
+</beans>
