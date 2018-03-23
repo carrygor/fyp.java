@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.com.youplus.tenants.dao.auto.UpTenantsLevelMapper">
+<mapper namespace="cn.com.carry.tenants.dao.auto.COriginDataMapper">
 <!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 -->
 	<!-- 开启二级缓存 -->
 	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="cn.com.youplus.model.auto.entity.tenants.UpTenantsLevel">
+	<resultMap id="BaseResultMap" type="cn.com.carry.model.auto.entity.tenants.COriginData">
 		<result column="id" property="id" />
-		<result column="name" property="name" />
-		<result column="level" property="level" />
-		<result column="description" property="description" />
-		<result column="logic_delete" property="logicDelete" />
+		<result column="title" property="title" />
+		<result column="text" property="text" />
+		<result column="data_time" property="dataTime" />
 		<result column="add_time" property="addTime" />
 		<result column="update_time" property="updateTime" />
-		<result column="tenants_company_id" property="tenantsCompanyId" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, level, description, logic_delete AS logicDelete, add_time AS addTime, update_time AS updateTime, tenants_company_id AS tenantsCompanyId
+        id, title, text, data_time AS dataTime, add_time AS addTime, update_time AS updateTime
     </sql>
 
 </mapper>
