@@ -12,13 +12,14 @@
 		<result column="sub_title" property="subTitle" />
 		<result column="main_title" property="mainTitle" />
 		<result column="url" property="url" />
+		<result column="status" property="status" />
 		<result column="add_time" property="addTime" />
 		<result column="update_time" property="updateTime" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, full_title AS fullTitle, sub_title AS subTitle, main_title AS mainTitle, url, add_time AS addTime, update_time AS updateTime
+        id, full_title AS fullTitle, sub_title AS subTitle, main_title AS mainTitle, url, status, add_time AS addTime, update_time AS updateTime
     </sql>
 
 </mapper>

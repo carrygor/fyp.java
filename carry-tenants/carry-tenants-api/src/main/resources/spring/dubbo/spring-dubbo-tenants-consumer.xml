@@ -19,13 +19,20 @@
 					interface="cn.com.carry.tenants.api.auto.COriginDataPageUrlService"
 					version="${dubbo.interface.version}"/>
 
-
 	<dubbo:reference  id="cOriginDataService"
 					interface="cn.com.carry.tenants.api.auto.COriginDataService"
 					version="${dubbo.interface.version}"/>
 
-	<dubbo:reference  id="dataStructureService"
-					  interface="cn.com.carry.tenants.api.common.DataStructureService"
-					  version="${dubbo.interface.version}" />
+	<dubbo:reference  id="cUserService"
+					interface="cn.com.carry.tenants.api.auto.CUserService"
+					version="${dubbo.interface.version}"/>
+
+	<dubbo:reference  id="crawlerService"
+					interface="cn.com.carry.tenants.api.common.CrawlerService"
+					version="${dubbo.interface.version}"/>
+
+	<dubbo:reference  id="cFinalDataService"
+					interface="cn.com.carry.tenants.api.auto.CFinalDataService"
+					version="${dubbo.interface.version}"/>
 
 </beans>

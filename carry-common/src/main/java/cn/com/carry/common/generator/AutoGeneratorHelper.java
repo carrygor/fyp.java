@@ -177,6 +177,8 @@ public class AutoGeneratorHelper {
 
     public static final String [] TENNATS_TABLES = new String [] {
             "c_test",
+            "c_user",
+            "c_final_data",
             "c_origin_data",
             "c_origin_data_page_url",
     };

@@ -27,8 +27,6 @@
 	<!--DB-->
 
 	<import resource="classpath*:spring/dubbo/spring-dubbo-tenants-provider.xml" />
-	<import resource="classpath*:spring/dubbo/spring-dubbo-apps-consumer.xml" />
-	<import resource="classpath*:spring/dubbo/spring-dubbo-base-consumer.xml" />
 	<import resource="classpath*:META-INF/common/applicationContext-system.xml" />
 
 

@@ -5,6 +5,7 @@ import cn.com.carry.model.auto.entity.tenants.COriginDataPageUrl;
 import cn.com.carry.tenants.api.auto.COriginDataPageUrlService;
 import cn.com.carry.tenants.api.auto.COriginDataService;
 import cn.com.carry.tenants.api.auto.CTestService;
+import cn.com.carry.tenants.api.common.CrawlerService;
 import cn.com.carry.tenants.server.controller.SuperController;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -48,6 +49,9 @@ public class CrawlerController extends SuperController {
     @Autowired
     private COriginDataPageUrlService cOriginDataPageUrlService;
 
+    @Autowired
+    private CrawlerService crawlerService;
+
     @Override
     public BaseResponse exceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception exception) throws IOException {
         return super.exceptionRealHandler(request, response, exception);
@@ -55,8 +59,8 @@ public class CrawlerController extends SuperController {
 
     public final static String listPrefix = "http://ecp.sgcc.com.cn/html/news/global/018013001_00/list_";
 
-    @PostMapping("/getPageList/upload")
-    public BaseResponse getPageList() throws Exception {
+    @PostMapping("/getPageList")
+    public BaseResponse getPageList() {
         BaseResponse response = new BaseResponse();
 
         int pageNum = 49; //49页
@@ -87,6 +91,20 @@ public class CrawlerController extends SuperController {
         }
 
         return response;
+    }
+
+    @PostMapping("/crawPage")
+    public BaseResponse crawPage() throws Exception {
+        crawlerService.crawPageList();
+
+        return new BaseResponse();
+    }
+
+    @PostMapping("/filterData")
+    public BaseResponse filterData() {
+        crawlerService.filterData();
+
+        return new BaseResponse();
     }
 
 

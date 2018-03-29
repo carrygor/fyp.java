@@ -30,10 +30,13 @@ public class StatelessAuthcFilter extends AccessControlFilter {
         if (((HttpServletRequest)request).getRequestURI().contains("login")) {
             return true;
         }
-        if (((HttpServletRequest)request).getRequestURI().contains("upload")) {
+        if (((HttpServletRequest)request).getRequestURI().contains("register")) {
             return true;
         }
-        if (((HttpServletRequest)request).getRequestURI().contains("oauth")) {
+        if (((HttpServletRequest)request).getRequestURI().contains("crawler")) {
+            return true;
+        }
+        if (((HttpServletRequest)request).getRequestURI().contains("upload")) {
             return true;
         }
         return false;

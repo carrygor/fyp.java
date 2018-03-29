@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.carry.tenants.dao.auto.CFinalDataMapper">
+<!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 --><!-- 开启二级缓存 -->
+	<!-- 开启二级缓存 -->
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.carry.model.auto.entity.tenants.CFinalData">
+		<id column="id" property="id" />
+		<result column="data_type" property="dataType" />
+		<result column="supplier" property="supplier" />
+		<result column="product_name" property="productName" />
+		<result column="product_buyer" property="productBuyer" />
+		<result column="announcement_publisher" property="announcementPublisher" />
+		<result column="publish_time" property="publishTime" />
+		<result column="handle_way" property="handleWay" />
+		<result column="time_range" property="timeRange" />
+		<result column="handle_reason" property="handleReason" />
+		<result column="url" property="url" />
+		<result column="add_time" property="addTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, data_type AS dataType, supplier, product_name AS productName, product_buyer AS productBuyer, announcement_publisher AS announcementPublisher, publish_time AS publishTime, handle_way AS handleWay, time_range AS timeRange, handle_reason AS handleReason, url, add_time AS addTime
+    </sql>
+
+</mapper>

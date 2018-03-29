@@ -28,6 +28,7 @@ public class COriginDataPageUrl extends Model<COriginDataPageUrl> implements Ser
 	@TableField("main_title")
 	private String mainTitle;
 	private String url;
+	private String status;
 	@TableField("add_time")
 	private Date addTime;
 	@TableField("update_time")
@@ -79,6 +80,15 @@ public class COriginDataPageUrl extends Model<COriginDataPageUrl> implements Ser
 		return this;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public COriginDataPageUrl setStatus(String status) {
+		this.status = status;
+		return this;
+	}
+
 	public Date getAddTime() {
 		return addTime;
 	}
@@ -107,6 +117,8 @@ public class COriginDataPageUrl extends Model<COriginDataPageUrl> implements Ser
 
 	public static final String URL = "url";
 
+	public static final String STATUS = "status";
+
 	public static final String ADD_TIME = "add_time";
 
 	public static final String UPDATE_TIME = "update_time";
@@ -124,6 +136,7 @@ public class COriginDataPageUrl extends Model<COriginDataPageUrl> implements Ser
 			", subTitle=" + subTitle +
 			", mainTitle=" + mainTitle +
 			", url=" + url +
+			", status=" + status +
 			", addTime=" + addTime +
 			", updateTime=" + updateTime +
 			"}";
