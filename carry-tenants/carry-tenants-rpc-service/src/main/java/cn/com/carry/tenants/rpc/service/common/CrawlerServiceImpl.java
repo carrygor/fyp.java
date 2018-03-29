@@ -3,13 +3,16 @@ package cn.com.carry.tenants.rpc.service.common;
 import cn.com.carry.model.auto.entity.tenants.CFinalData;
 import cn.com.carry.model.auto.entity.tenants.COriginData;
 import cn.com.carry.model.auto.entity.tenants.COriginDataPageUrl;
+import cn.com.carry.model.auto.entity.tenants.COriginExcelData;
 import cn.com.carry.tenants.api.auto.CFinalDataService;
 import cn.com.carry.tenants.api.auto.COriginDataPageUrlService;
 import cn.com.carry.tenants.api.auto.COriginDataService;
+import cn.com.carry.tenants.api.auto.COriginExcelDataService;
 import cn.com.carry.tenants.api.common.CrawlerService;
 import cn.com.carry.tenants.common.model.enums.FinalDataTypeEnum;
 import cn.com.carry.tenants.common.model.enums.OriginDataStatusEnum;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+@SuppressWarnings("Duplicates")
 @Service("crawlerService")
 public class CrawlerServiceImpl implements CrawlerService{
 
@@ -40,6 +44,9 @@ public class CrawlerServiceImpl implements CrawlerService{
     @Autowired
     private CFinalDataService cFinalDataService;
 
+    @Autowired
+    private COriginExcelDataService cOriginExcelDataService;
+
     @Override
     public boolean crawPage(String url, String title) throws Exception{
         Document doc = null;
@@ -52,7 +59,7 @@ public class CrawlerServiceImpl implements CrawlerService{
         Element timeElement = doc.select(".articleTitle_details").get(0);
         String timeStr = timeElement.text();
 
-        Elements pElements = doc.select(".article_infor>p");
+        Elements pElements = doc.select(".article_infor p");
         for (Element p : pElements) {
             String text = p.text();
             text = text.trim();
@@ -81,7 +88,7 @@ public class CrawlerServiceImpl implements CrawlerService{
     public void crawPageList() {
         List<COriginDataPageUrl> urlList = cOriginDataPageUrlService.selectList(
                 new EntityWrapper<COriginDataPageUrl>()
-                        .eq(COriginDataPageUrl.STATUS, OriginDataStatusEnum.CREATE.getStatus())
+                        .eq(COriginDataPageUrl.STATUS, OriginDataStatusEnum.FAIL.getStatus())
         );
         int i = 0;
         for (COriginDataPageUrl pageUrl : urlList) {
@@ -100,6 +107,55 @@ public class CrawlerServiceImpl implements CrawlerService{
             pageUrl.setUpdateTime(new Date());
             cOriginDataPageUrlService.updateById(pageUrl);
         }
+    }
+
+    @Override
+    public void crawExcelPageList() {
+        List<COriginDataPageUrl> urlList = cOriginDataPageUrlService.selectList(
+                new EntityWrapper<COriginDataPageUrl>()
+                        .eq(COriginDataPageUrl.STATUS, OriginDataStatusEnum.FAIL.getStatus())
+        );
+        int i = 0;
+        for (COriginDataPageUrl pageUrl : urlList) {
+            logger.info("爬取Excel网页任务：已爬取 " + i++ + " 页，剩余 " + (urlList.size() - i) + " 页");
+            boolean flag = false;
+            try {
+                flag = crawExcelPage(pageUrl.getUrl(), pageUrl.getFullTitle());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (flag) {
+                pageUrl.setStatus(OriginDataStatusEnum.SUCCESS.getStatus());
+                pageUrl.setUpdateTime(new Date());
+                cOriginDataPageUrlService.updateById(pageUrl);
+            }
+        }
+    }
+
+    private boolean crawExcelPage(String url, String title) {
+        Document doc = null;
+        boolean flag = false;
+        try {
+            doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(3000).post();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Element table = doc.select(".article_infor table").first();
+        if (table != null) {
+            Element timeElement = doc.select(".articleTitle_details").get(0);
+            String timeStr = timeElement.text();
+
+            COriginExcelData cOriginExcelData = new COriginExcelData();
+            cOriginExcelData.setTitle(title)
+                    .setHtml(table.outerHtml())
+                    .setDataTime(timeStr)
+                    .setUrl(url)
+                    .setStatus(OriginDataStatusEnum.CREATE.getStatus());
+            cOriginExcelDataService.insert(cOriginExcelData);
+            flag = true;
+        }
+
+        return flag;
     }
 
     @Override
@@ -195,6 +251,118 @@ public class CrawlerServiceImpl implements CrawlerService{
             originData.setUpdateTime(new Date());
             cOriginDataService.updateById(originData);
         }
+    }
+
+    @Override
+    public void filterExcelData() {
+        int count = cOriginExcelDataService.selectCount(
+                new EntityWrapper<COriginExcelData>()
+                        .eq(COriginExcelData.STATUS, OriginDataStatusEnum.CREATE.getStatus())
+        );
+        int pageSize = 10;
+        int totalPageNum = count / pageSize;
+        int num = 0;
+
+        for (int pageNum = 0; pageNum <= totalPageNum; pageNum++) {
+            Page<COriginExcelData> page = cOriginExcelDataService.selectPage(
+                new Page<>(pageNum, pageSize),
+                new EntityWrapper<COriginExcelData>()
+                        .eq(COriginExcelData.STATUS, OriginDataStatusEnum.CREATE.getStatus())
+            );
+            List<COriginExcelData> list = page.getRecords();
+
+            for (COriginExcelData cOriginExcelData : list) {
+                logger.info("正在处理第" + ++num + "条table数据，还剩" + (count - num) + "条");
+
+                boolean flag = true;
+                try {
+                    FinalDataTypeEnum dataTypeEnum;
+                    String dataTypePattern = "解除|撤销";
+                    Pattern dataTypeRegex = Pattern.compile(dataTypePattern);
+                    Matcher dataTypeMatcher = dataTypeRegex.matcher(cOriginExcelData.getTitle());
+                    if (dataTypeMatcher.find()) {
+                        dataTypeEnum = FinalDataTypeEnum.解除处罚;
+                    } else {
+                        dataTypeEnum = FinalDataTypeEnum.处罚;
+                    }
+
+                    Document document = Jsoup.parse(cOriginExcelData.getHtml());
+                    Element table = document.select("table").first();
+                    Element firstLine = table.select("tr").first();
+                    Elements titles = firstLine.select("td");
+
+                    String publisher = "";
+                    String publisherPattern = "[^于日月]+公司";
+                    Pattern publisherRegex = Pattern.compile(publisherPattern);
+                    Matcher publisherMatcher = publisherRegex.matcher(cOriginExcelData.getTitle());
+                    if (publisherMatcher.find()) {
+                        publisher = publisherMatcher.group(0);
+                    }
+
+                    int supplierIndex=-1,handleReasonIndex=-1,handleWayIndex=-1,productNameIndex=-1;
+
+                    for (int i = 0; i < titles.size(); i++) {
+                        String titleStr = titles.get(i).text();
+                        if (titleStr.contains("供应商") || titleStr.contains("服务商")) {
+                            supplierIndex = i;
+                        } else if (titleStr.contains("不良行为")) {
+                            handleReasonIndex = i;
+                        } else if (titleStr.contains("措施") || titleStr.contains("处理建议")) {
+                            handleWayIndex = i;
+                        } else if (titleStr.contains("范围") || titleStr.contains("物资")) {
+                            productNameIndex = i;
+                        }
+                    }
+
+                    Elements trs = table.select("tr");
+                    for (int i = 1; i < trs.size(); i++) {
+                        Elements tds = trs.get(i).select("td");
+                        CFinalData cFinalData = new CFinalData();
+                        String supplier="",handleReason="",handleWay="",productName="";
+                        if (supplierIndex >= 0) {
+                            supplier = tds.get(supplierIndex).text();
+                        }
+                        if (handleReasonIndex >= 0) {
+                            handleReason = tds.get(handleReasonIndex).text();
+                        }
+                        if (handleWayIndex >= 0) {
+                            handleWay = tds.get(handleWayIndex).text();
+                        }
+                        if (productNameIndex >= 0) {
+                            productName = tds.get(productNameIndex).text();
+                        }
+
+                        cFinalData.setUrl(cOriginExcelData.getUrl())
+                                .setSupplier(supplier)
+                                .setPublishTime(cOriginExcelData.getDataTime())
+                                .setProductName(productName)
+                                .setProductBuyer(publisher)
+                                .setHandleWay(handleWay)
+                                .setHandleReason(handleReason)
+                                .setDataType(dataTypeEnum.getType())
+                                .setAnnouncementPublisher(publisher)
+                                .setSort(3)
+                                .setSource("TablePage")
+                                .setAddTime(new Date());
+
+                        cFinalDataService.insert(cFinalData);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    flag = false;
+                }
+
+                if (flag) {
+                    cOriginExcelData.setStatus(OriginDataStatusEnum.SUCCESS.getStatus());
+                } else {
+                    cOriginExcelData.setStatus(OriginDataStatusEnum.FAIL.getStatus());
+                }
+                cOriginExcelData.setUpdateTime(new Date());
+                cOriginExcelDataService.updateById(cOriginExcelData);
+
+            }
+        }
+
     }
 
 

@@ -18,12 +18,14 @@
 		<result column="time_range" property="timeRange" />
 		<result column="handle_reason" property="handleReason" />
 		<result column="url" property="url" />
+		<result column="sort" property="sort" />
+		<result column="source" property="source" />
 		<result column="add_time" property="addTime" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, data_type AS dataType, supplier, product_name AS productName, product_buyer AS productBuyer, announcement_publisher AS announcementPublisher, publish_time AS publishTime, handle_way AS handleWay, time_range AS timeRange, handle_reason AS handleReason, url, add_time AS addTime
+        id, data_type AS dataType, supplier, product_name AS productName, product_buyer AS productBuyer, announcement_publisher AS announcementPublisher, publish_time AS publishTime, handle_way AS handleWay, time_range AS timeRange, handle_reason AS handleReason, url, sort, source, add_time AS addTime
     </sql>
 
 </mapper>

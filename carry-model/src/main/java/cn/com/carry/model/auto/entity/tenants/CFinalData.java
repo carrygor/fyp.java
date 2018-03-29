@@ -39,6 +39,8 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 	@TableField("handle_reason")
 	private String handleReason;
 	private String url;
+	private Integer sort;
+	private String source;
 	@TableField("add_time")
 	private Date addTime;
 
@@ -142,6 +144,24 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 		return this;
 	}
 
+	public Integer getSort() {
+		return sort;
+	}
+
+	public CFinalData setSort(Integer sort) {
+		this.sort = sort;
+		return this;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public CFinalData setSource(String source) {
+		this.source = source;
+		return this;
+	}
+
 	public Date getAddTime() {
 		return addTime;
 	}
@@ -173,6 +193,10 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 
 	public static final String URL = "url";
 
+	public static final String SORT = "sort";
+
+	public static final String SOURCE = "source";
+
 	public static final String ADD_TIME = "add_time";
 
 	@Override
@@ -194,6 +218,8 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 			", timeRange=" + timeRange +
 			", handleReason=" + handleReason +
 			", url=" + url +
+			", sort=" + sort +
+			", source=" + source +
 			", addTime=" + addTime +
 			"}";
 	}

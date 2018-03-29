@@ -96,13 +96,15 @@ public class CrawlerController extends SuperController {
     @PostMapping("/crawPage")
     public BaseResponse crawPage() throws Exception {
         crawlerService.crawPageList();
+//        crawlerService.crawExcelPageList();
 
         return new BaseResponse();
     }
 
     @PostMapping("/filterData")
     public BaseResponse filterData() {
-        crawlerService.filterData();
+//        crawlerService.filterData();
+        crawlerService.filterExcelData();
 
         return new BaseResponse();
     }

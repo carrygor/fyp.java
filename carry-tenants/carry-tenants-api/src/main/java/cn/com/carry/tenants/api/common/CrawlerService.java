@@ -6,5 +6,9 @@ public interface CrawlerService {
 
     void crawPageList();
 
+    void crawExcelPageList();
+
     void filterData();
+
+    void filterExcelData();
 }

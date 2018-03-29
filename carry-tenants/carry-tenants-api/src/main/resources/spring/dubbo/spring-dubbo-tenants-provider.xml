@@ -26,9 +26,12 @@
 					  interface="cn.com.carry.tenants.api.auto.CUserService"
 					  version="${dubbo.interface.version}"/>
 
-
 	<dubbo:service  ref="cFinalDataService"
 					  interface="cn.com.carry.tenants.api.auto.CFinalDataService"
+					  version="${dubbo.interface.version}"/>
+
+	<dubbo:service  ref="cOriginExcelDataService"
+					  interface="cn.com.carry.tenants.api.auto.COriginExcelDataService"
 					  version="${dubbo.interface.version}"/>
 
 	<dubbo:service  ref="crawlerService"
