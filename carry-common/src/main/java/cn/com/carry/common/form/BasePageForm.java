@@ -28,6 +28,15 @@ public class BasePageForm extends BaseForm implements Serializable {
     @Check(numeric = true, minNum = 1)
     private int pageNum = 1;
 
+    private String dataType;
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
 
     public String getKeyword() {
         return keyword == null ? null : keyword.trim();

@@ -1,17 +1,21 @@
 package cn.com.carry.tenants.server.controller.user;
 
 import cn.com.carry.common.exception.interaction.AlertException;
+import cn.com.carry.common.form.BasePageForm;
 import cn.com.carry.common.model.base.BaseResponse;
 import cn.com.carry.common.util.AESUtil;
 import cn.com.carry.common.util.Constants;
 import cn.com.carry.common.util.MD5Util;
 import cn.com.carry.common.util.StringHelper;
 import cn.com.carry.common.validation.annotation.Valid;
+import cn.com.carry.model.auto.entity.tenants.CFinalData;
 import cn.com.carry.model.auto.entity.tenants.CUser;
+import cn.com.carry.tenants.api.auto.CFinalDataService;
 import cn.com.carry.tenants.api.auto.CUserService;
 import cn.com.carry.tenants.common.form.LoginForm;
 import cn.com.carry.tenants.server.controller.SuperController;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +39,9 @@ public class UserController extends SuperController {
 
     @Autowired
     private CUserService cUserService;
+
+    @Autowired
+    private CFinalDataService cFinalDataService;
 
     @Autowired
     private HttpServletRequest request;
@@ -98,6 +105,27 @@ public class UserController extends SuperController {
                 .setSalt(salt)
                 .setPassword(password);
         cUserService.insert(user);
+
+        return response;
+    }
+
+    @PostMapping("/finalData/get")
+    public BaseResponse finalDataGet(BasePageForm form) {
+        BaseResponse response = new BaseResponse();
+
+        Page<CFinalData> page = cFinalDataService.selectPage(
+                new Page<>(form.getPageNum(), form.getPageSize()),
+                new EntityWrapper<CFinalData>()
+                        .eq(CFinalData.DATA_TYPE, form.getDataType())
+                        .like(CFinalData.SUPPLIER, form.getKeyword())
+                        .orderBy(CFinalData.SORT, true)
+        );
+
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("list", page.getRecords());
+        result.put("total", page.getTotal());
+        response.setData(result);
 
         return response;
     }

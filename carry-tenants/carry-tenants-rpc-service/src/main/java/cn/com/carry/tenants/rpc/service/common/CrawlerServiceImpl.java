@@ -288,8 +288,8 @@ public class CrawlerServiceImpl implements CrawlerService{
 
                     Document document = Jsoup.parse(cOriginExcelData.getHtml());
                     Element table = document.select("table").first();
-                    Element firstLine = table.select("tr").first();
-                    Elements titles = firstLine.select("td");
+                    Elements trs = table.select("tr");
+                    int lineIndex = 0;
 
                     String publisher = "";
                     String publisherPattern = "[^于日月]+公司";
@@ -300,22 +300,25 @@ public class CrawlerServiceImpl implements CrawlerService{
                     }
 
                     int supplierIndex=-1,handleReasonIndex=-1,handleWayIndex=-1,productNameIndex=-1;
-
-                    for (int i = 0; i < titles.size(); i++) {
-                        String titleStr = titles.get(i).text();
-                        if (titleStr.contains("供应商") || titleStr.contains("服务商")) {
-                            supplierIndex = i;
-                        } else if (titleStr.contains("不良行为")) {
-                            handleReasonIndex = i;
-                        } else if (titleStr.contains("措施") || titleStr.contains("处理建议")) {
-                            handleWayIndex = i;
-                        } else if (titleStr.contains("范围") || titleStr.contains("物资")) {
-                            productNameIndex = i;
+                    while (supplierIndex + handleReasonIndex + handleWayIndex + productNameIndex == -4 && lineIndex < trs.size()) {
+                        Element titleLine = trs.get(lineIndex);
+                        lineIndex++;
+                        Elements titles = titleLine.select("td");
+                        for (int i = 0; i < titles.size(); i++) {
+                            String titleStr = titles.get(i).text();
+                            if (titleStr.contains("供应商") || titleStr.contains("服务商")) {
+                                supplierIndex = i;
+                            } else if (titleStr.contains("不良行为")) {
+                                handleReasonIndex = i;
+                            } else if (titleStr.contains("措施") || titleStr.contains("处理建议")) {
+                                handleWayIndex = i;
+                            } else if (titleStr.contains("范围") || titleStr.contains("物资")) {
+                                productNameIndex = i;
+                            }
                         }
                     }
 
-                    Elements trs = table.select("tr");
-                    for (int i = 1; i < trs.size(); i++) {
+                    for (int i = lineIndex; i < trs.size(); i++) {
                         Elements tds = trs.get(i).select("td");
                         CFinalData cFinalData = new CFinalData();
                         String supplier="",handleReason="",handleWay="",productName="";
