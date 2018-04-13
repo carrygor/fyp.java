@@ -25,8 +25,8 @@ public class AutoGeneratorHelper {
      */
     private static final String MODULE_PREFIX = "carry-";
 
-    private static final String DB_USER = "carry";
-    private static final String DB_PASS = AESUtil.AESDecode("TtWYUl3HAXPuVrkkXpB5bg==");
+    private static final String DB_USER = "root";
+    private static final String DB_PASS = AESUtil.AESDecode("ArYR0BZ8+QKBvb9k9oHalg==");
     private static final String DB_URL = "jdbc:mysql://139.199.4.149:3306/fyp?characterEncoding=utf8";
 
     /**
