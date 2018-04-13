@@ -95,8 +95,9 @@ public class CrawlerController extends SuperController {
 
     @PostMapping("/crawPage")
     public BaseResponse crawPage() throws Exception {
-        crawlerService.crawPageList();
 //        crawlerService.crawExcelPageList();
+//        crawlerService.crawPageList();
+        crawlerService.crawFilePageList();
 
         return new BaseResponse();
     }

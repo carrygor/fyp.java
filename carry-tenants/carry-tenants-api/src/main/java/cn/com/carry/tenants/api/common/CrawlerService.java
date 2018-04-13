@@ -11,4 +11,7 @@ public interface CrawlerService {
     void filterData();
 
     void filterExcelData();
+
+    //region 获取带附件页面data
+    void crawFilePageList();
 }

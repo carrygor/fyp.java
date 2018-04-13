@@ -14,7 +14,7 @@ public class TentantsTask {
 
     @Scheduled(cron="0/10 * *  * * ? ")
     public void alive() {
-        log.info("优加+ TENANTS Server服务器---每10秒一次的log，证明服务器还活着。。。");
+        log.info("Carry+ TENANTS Server服务器---每10秒一次的log，证明服务器还活着。。。");
     }
 
 }

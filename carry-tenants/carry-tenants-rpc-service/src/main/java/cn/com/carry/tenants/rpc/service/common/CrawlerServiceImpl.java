@@ -22,7 +22,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -46,6 +48,8 @@ public class CrawlerServiceImpl implements CrawlerService{
 
     @Autowired
     private COriginExcelDataService cOriginExcelDataService;
+
+    //region 获取普通页面
 
     @Override
     public boolean crawPage(String url, String title) throws Exception{
@@ -109,55 +113,7 @@ public class CrawlerServiceImpl implements CrawlerService{
         }
     }
 
-    @Override
-    public void crawExcelPageList() {
-        List<COriginDataPageUrl> urlList = cOriginDataPageUrlService.selectList(
-                new EntityWrapper<COriginDataPageUrl>()
-                        .eq(COriginDataPageUrl.STATUS, OriginDataStatusEnum.FAIL.getStatus())
-        );
-        int i = 0;
-        for (COriginDataPageUrl pageUrl : urlList) {
-            logger.info("爬取Excel网页任务：已爬取 " + i++ + " 页，剩余 " + (urlList.size() - i) + " 页");
-            boolean flag = false;
-            try {
-                flag = crawExcelPage(pageUrl.getUrl(), pageUrl.getFullTitle());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (flag) {
-                pageUrl.setStatus(OriginDataStatusEnum.SUCCESS.getStatus());
-                pageUrl.setUpdateTime(new Date());
-                cOriginDataPageUrlService.updateById(pageUrl);
-            }
-        }
-    }
-
-    private boolean crawExcelPage(String url, String title) {
-        Document doc = null;
-        boolean flag = false;
-        try {
-            doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(3000).post();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Element table = doc.select(".article_infor table").first();
-        if (table != null) {
-            Element timeElement = doc.select(".articleTitle_details").get(0);
-            String timeStr = timeElement.text();
-
-            COriginExcelData cOriginExcelData = new COriginExcelData();
-            cOriginExcelData.setTitle(title)
-                    .setHtml(table.outerHtml())
-                    .setDataTime(timeStr)
-                    .setUrl(url)
-                    .setStatus(OriginDataStatusEnum.CREATE.getStatus());
-            cOriginExcelDataService.insert(cOriginExcelData);
-            flag = true;
-        }
-
-        return flag;
-    }
-
+    //  过滤普通data
     @Override
     public void filterData() {
         List<COriginData> dataList = cOriginDataService.selectList(
@@ -253,6 +209,60 @@ public class CrawlerServiceImpl implements CrawlerService{
         }
     }
 
+    //endregion
+
+    //region 获取table页面data
+
+    @Override
+    public void crawExcelPageList() {
+        List<COriginDataPageUrl> urlList = cOriginDataPageUrlService.selectList(
+                new EntityWrapper<COriginDataPageUrl>()
+                        .eq(COriginDataPageUrl.STATUS, OriginDataStatusEnum.FAIL.getStatus())
+        );
+        int i = 0;
+        for (COriginDataPageUrl pageUrl : urlList) {
+            logger.info("爬取Excel网页任务：已爬取 " + i++ + " 页，剩余 " + (urlList.size() - i) + " 页");
+            boolean flag = false;
+            try {
+                flag = crawExcelPage(pageUrl.getUrl(), pageUrl.getFullTitle());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (flag) {
+                pageUrl.setStatus(OriginDataStatusEnum.SUCCESS.getStatus());
+                pageUrl.setUpdateTime(new Date());
+                cOriginDataPageUrlService.updateById(pageUrl);
+            }
+        }
+    }
+
+    private boolean crawExcelPage(String url, String title) {
+        Document doc = null;
+        boolean flag = false;
+        try {
+            doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(3000).post();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Element table = doc.select(".article_infor table").first();
+        if (table != null) {
+            Element timeElement = doc.select(".articleTitle_details").get(0);
+            String timeStr = timeElement.text();
+
+            COriginExcelData cOriginExcelData = new COriginExcelData();
+            cOriginExcelData.setTitle(title)
+                    .setHtml(table.outerHtml())
+                    .setDataTime(timeStr)
+                    .setUrl(url)
+                    .setStatus(OriginDataStatusEnum.CREATE.getStatus());
+            cOriginExcelDataService.insert(cOriginExcelData);
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    //  过滤table data
     @Override
     public void filterExcelData() {
         int count = cOriginExcelDataService.selectCount(
@@ -368,21 +378,126 @@ public class CrawlerServiceImpl implements CrawlerService{
 
     }
 
+    //endregion
 
-    public static void main(String[] args) {
-        String input = "2、江西广通电缆有限公司 在线缆协议库存中标厂家质量监督活动中，因该供应商供应的电力电缆（规格/型号：JKLYJ-1kV-1×120）在检测中发现主绝缘热延伸试验中发生断裂质量问题。依据《细则》相关规定，属于一般不良行为，给予了在相应物资类别标包中，扣减该供应商商务评审分值10分的处罚（按评分权重折算前）。现经项目单位检查验收，该公司已对上述问题完成整改,并经验收合格。";
-        String dataTypePattern = "[因|经][\\S]+?。";
-        Pattern dataTypeRegex = Pattern.compile(dataTypePattern);
-        Matcher dataTypeMatcher = dataTypeRegex.matcher(input);
-        if (dataTypeMatcher.find()) {
-            input = input.replaceFirst(dataTypePattern, "");
-            dataTypeMatcher = dataTypeRegex.matcher(input);
-            boolean find = dataTypeMatcher.find();
-            if (find) {
-                String b = dataTypeMatcher.group();
-                String c = dataTypeMatcher.group();
+    //region 获取带附件页面data
+    @Override
+    public void crawFilePageList() {
+        List<COriginDataPageUrl> urlList = cOriginDataPageUrlService.selectList(
+                new EntityWrapper<COriginDataPageUrl>()
+                        .eq(COriginDataPageUrl.STATUS, OriginDataStatusEnum.FAIL.getStatus())
+        );
+        int i = 0;
+        for (COriginDataPageUrl pageUrl : urlList) {
+            logger.info("爬取带附件网页任务：已爬取 " + i++ + " 页，剩余 " + (urlList.size() - i) + " 页");
+            boolean flag = false;
+            try {
+                flag = crawFilePage(pageUrl.getUrl(), pageUrl.getFullTitle());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (flag) {
+                pageUrl.setStatus(OriginDataStatusEnum.SUCCESS.getStatus());
+                pageUrl.setUpdateTime(new Date());
+                cOriginDataPageUrlService.updateById(pageUrl);
             }
         }
+    }
+
+    private boolean crawFilePage(String url, String title) {
+        Document doc = null;
+        boolean flag = false;
+        String prefix = "http://ecp.sgcc.com.cn";
+        try {
+            doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(3000).post();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Elements links = doc.select(".bot_list a");
+        for (Element link : links) {
+            try {
+                String downloadUrl = link.attr("href");
+                String pattern = "[^/]+$";
+                Pattern Regex = Pattern.compile(pattern);
+                Matcher matcher = Regex.matcher(downloadUrl);
+                String name = "noName";
+                if (matcher.find()) {
+                    name = matcher.group(0);
+                }
+                downloadUrl = prefix + downloadUrl;
+                downLoadFromUrl(downloadUrl, name, "D:/FYP/file");
+                flag = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return flag;
+    }
+
+
+    //endregion
+
+    /**
+     * 从网络Url中下载文件
+     * @param urlStr
+     * @param fileName
+     * @param savePath
+     * @throws IOException
+     */
+    public static void downLoadFromUrl(String urlStr,String fileName,String savePath) throws IOException{
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        //设置超时间为3秒
+        conn.setConnectTimeout(3*1000);
+        //防止屏蔽程序抓取而返回403错误
+        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+
+        //得到输入流
+        InputStream inputStream = conn.getInputStream();
+        //获取自己数组
+        byte[] getData = readInputStream(inputStream);
+
+        //文件保存位置
+        File saveDir = new File(savePath);
+        if(!saveDir.exists()){
+            saveDir.mkdir();
+        }
+        File file = new File(saveDir+File.separator+fileName);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(getData);
+        if(fos!=null){
+            fos.close();
+        }
+        if(inputStream!=null){
+            inputStream.close();
+        }
+
+
+        System.out.println("info:"+url+" download success");
+
+    }
+
+    /**
+     * 从输入流中获取字节数组
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    public static  byte[] readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
+    }
+
+
+    public static void main(String[] args) {
+//        crawFilePage("http://ecp.sgcc.com.cn/html/news/018013001/52986.html", "国网青海省电力公司2017年11月供应商不良行为处理情况公示");
     }
 }
 
