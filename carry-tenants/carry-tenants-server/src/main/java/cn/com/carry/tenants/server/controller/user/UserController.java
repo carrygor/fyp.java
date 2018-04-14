@@ -8,10 +8,13 @@ import cn.com.carry.common.util.Constants;
 import cn.com.carry.common.util.MD5Util;
 import cn.com.carry.common.util.StringHelper;
 import cn.com.carry.common.validation.annotation.Valid;
+import cn.com.carry.model.auto.entity.tenants.CAnalyzedData;
 import cn.com.carry.model.auto.entity.tenants.CFinalData;
 import cn.com.carry.model.auto.entity.tenants.CUser;
+import cn.com.carry.tenants.api.auto.CAnalyzedDataService;
 import cn.com.carry.tenants.api.auto.CFinalDataService;
 import cn.com.carry.tenants.api.auto.CUserService;
+import cn.com.carry.tenants.common.form.KeywordForm;
 import cn.com.carry.tenants.common.form.LoginForm;
 import cn.com.carry.tenants.server.controller.SuperController;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -24,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,6 +46,9 @@ public class UserController extends SuperController {
 
     @Autowired
     private CFinalDataService cFinalDataService;
+
+    @Autowired
+    private CAnalyzedDataService cAnalyzedDataService;
 
     @Autowired
     private HttpServletRequest request;
@@ -125,6 +132,27 @@ public class UserController extends SuperController {
 
         result.put("list", page.getRecords());
         result.put("total", page.getTotal());
+        response.setData(result);
+
+        return response;
+    }
+
+    @PostMapping("/analyzed/get")
+    public BaseResponse analyzedGet(KeywordForm form) {
+        BaseResponse response = new BaseResponse();
+        CAnalyzedData cAnalyzedData = cAnalyzedDataService.selectOne(
+                new EntityWrapper<CAnalyzedData>()
+                        .eq(CAnalyzedData.SUPPLIER, form.getKeyword())
+        );
+
+        List<CFinalData> list = cFinalDataService.selectList(
+                new EntityWrapper<CFinalData>()
+                        .eq(CFinalData.SUPPLIER, form.getKeyword())
+        );
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("analyzedData", cAnalyzedData);
+        result.put("list", list);
         response.setData(result);
 
         return response;

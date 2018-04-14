@@ -15,48 +15,45 @@ import java.io.Serializable;
  *
  * @author 何文浩
  */
-@TableName("c_user")
-public class CUser extends Model<CUser> implements Serializable {
+@TableName("c_user_role")
+public class CUserRole extends Model<CUserRole> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
 	private Long id;
-	@TableField("user_name")
-	private String userName;
-	private String password;
+	private String name;
+	@TableField("role_code")
+	private String roleCode;
 	@TableField("add_time")
 	private Date addTime;
 	@TableField("update_time")
 	private Date updateTime;
-	private String salt;
-	@TableField("user_role_id")
-	private Long userRoleId;
 
 
 	public Long getId() {
 		return id;
 	}
 
-	public CUser setId(Long id) {
+	public CUserRole setId(Long id) {
 		this.id = id;
 		return this;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getName() {
+		return name;
 	}
 
-	public CUser setUserName(String userName) {
-		this.userName = userName;
+	public CUserRole setName(String name) {
+		this.name = name;
 		return this;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getRoleCode() {
+		return roleCode;
 	}
 
-	public CUser setPassword(String password) {
-		this.password = password;
+	public CUserRole setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
 		return this;
 	}
 
@@ -64,7 +61,7 @@ public class CUser extends Model<CUser> implements Serializable {
 		return addTime;
 	}
 
-	public CUser setAddTime(Date addTime) {
+	public CUserRole setAddTime(Date addTime) {
 		this.addTime = addTime;
 		return this;
 	}
@@ -73,42 +70,20 @@ public class CUser extends Model<CUser> implements Serializable {
 		return updateTime;
 	}
 
-	public CUser setUpdateTime(Date updateTime) {
+	public CUserRole setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
-		return this;
-	}
-
-	public String getSalt() {
-		return salt;
-	}
-
-	public CUser setSalt(String salt) {
-		this.salt = salt;
-		return this;
-	}
-
-	public Long getUserRoleId() {
-		return userRoleId;
-	}
-
-	public CUser setUserRoleId(Long userRoleId) {
-		this.userRoleId = userRoleId;
 		return this;
 	}
 
 	public static final String ID = "id";
 
-	public static final String USER_NAME = "user_name";
+	public static final String NAME = "name";
 
-	public static final String PASSWORD = "password";
+	public static final String ROLE_CODE = "role_code";
 
 	public static final String ADD_TIME = "add_time";
 
 	public static final String UPDATE_TIME = "update_time";
-
-	public static final String SALT = "salt";
-
-	public static final String USER_ROLE_ID = "user_role_id";
 
 	@Override
 	protected Serializable pkVal() {
@@ -117,14 +92,12 @@ public class CUser extends Model<CUser> implements Serializable {
 
 	@Override
 	public String toString() {
-		return "CUser{" +
+		return "CUserRole{" +
 			"id=" + id +
-			", userName=" + userName +
-			", password=" + password +
+			", name=" + name +
+			", roleCode=" + roleCode +
 			", addTime=" + addTime +
 			", updateTime=" + updateTime +
-			", salt=" + salt +
-			", userRoleId=" + userRoleId +
 			"}";
 	}
 }

@@ -23,6 +23,9 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -182,6 +185,20 @@ public class CrawlerServiceImpl implements CrawlerService{
                     timeRange = timeRangeMatcher.group();
                 }
 
+                Date start = new Date();
+                String startTimePattern = "([0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)[起至到-]";
+                Pattern startTimeRegex = Pattern.compile(startTimePattern);
+                Matcher startTimeMatcher = startTimeRegex.matcher(text);
+                if (startTimeMatcher.find()) {
+                    String startTime = startTimeMatcher.group(1);
+                    DateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+                    try {
+                        start = format.parse(startTime);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 finalData.setAddTime(new Date())
                         .setAnnouncementPublisher(publisher)
                         .setDataType(dataTypeEnum.getType())
@@ -192,6 +209,7 @@ public class CrawlerServiceImpl implements CrawlerService{
                         .setPublishTime(originData.getDataTime())
                         .setSupplier(originData.getCompany())
                         .setUrl(originData.getUrl())
+                        .setStartTime(start)
                         .setTimeRange(timeRange);
 
                 cFinalDataService.insert(finalData);
@@ -311,19 +329,24 @@ public class CrawlerServiceImpl implements CrawlerService{
                     }
 
                     int supplierIndex=-1,handleReasonIndex=-1,handleWayIndex=-1,productNameIndex=-1;
-                    while (supplierIndex + handleReasonIndex + handleWayIndex + productNameIndex == -4 && lineIndex < trs.size()) {
+                    int indexFlag = 0;
+                    while (indexFlag < 4 && lineIndex < trs.size()) {
                         Element titleLine = trs.get(lineIndex);
                         lineIndex++;
                         Elements titles = titleLine.select("td");
                         for (int i = 0; i < titles.size(); i++) {
                             String titleStr = titles.get(i).text();
                             if (titleStr.contains("供应商") || titleStr.contains("服务商")) {
+                                indexFlag++;
                                 supplierIndex = i;
-                            } else if (titleStr.contains("不良行为")) {
+                            } else if (titleStr.contains("不良行为") && !titleStr.contains("措施") && !titleStr.contains("等级")) {
+                                indexFlag++;
                                 handleReasonIndex = i;
                             } else if (titleStr.contains("措施") || titleStr.contains("处理建议")) {
+                                indexFlag++;
                                 handleWayIndex = i;
                             } else if (titleStr.contains("范围") || titleStr.contains("物资")) {
+                                indexFlag++;
                                 productNameIndex = i;
                             }
                         }
@@ -346,6 +369,34 @@ public class CrawlerServiceImpl implements CrawlerService{
                             productName = tds.get(productNameIndex).text();
                         }
 
+                        Date start = new Date();
+                        String startTimePattern = "([0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)[起至到-]";
+                        Pattern startTimeRegex = Pattern.compile(startTimePattern);
+                        Matcher startTimeMatcher = startTimeRegex.matcher(handleWay);
+                        if (startTimeMatcher.find()) {
+                            String startTime = startTimeMatcher.group(1);
+                            DateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+                            try {
+                                start = format.parse(startTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        Date end = null;
+                        String endTimePattern = "[起至到-]([0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)";
+                        Pattern endTimeRegex = Pattern.compile(endTimePattern);
+                        Matcher endTimeMatcher = endTimeRegex.matcher(handleWay);
+                        if (endTimeMatcher.find()) {
+                            String endTime = endTimeMatcher.group(1);
+                            DateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+                            try {
+                                end = format.parse(endTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                         cFinalData.setUrl(cOriginExcelData.getUrl())
                                 .setSupplier(supplier)
                                 .setPublishTime(cOriginExcelData.getDataTime())
@@ -355,9 +406,16 @@ public class CrawlerServiceImpl implements CrawlerService{
                                 .setHandleReason(handleReason)
                                 .setDataType(dataTypeEnum.getType())
                                 .setAnnouncementPublisher(publisher)
+                                .setStartTime(start)
+                                .setEndTime(end)
                                 .setSort(3)
                                 .setSource("TablePage")
                                 .setAddTime(new Date());
+
+                        if (end != null) {
+                            long m = ( end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 28L);
+                            cFinalData.setTimeRange(m + "个月");
+                        }
 
                         cFinalDataService.insert(cFinalData);
                     }
@@ -495,7 +553,7 @@ public class CrawlerServiceImpl implements CrawlerService{
                         String titleStr = titleRow.getCell(i).getStringCellValue();
                         if (titleStr.contains("供应商") || titleStr.contains("服务商")) {
                             supplierIndex = i;
-                        } else if (titleStr.contains("不良行为") && !titleStr.contains("措施")) {
+                        } else if (titleStr.contains("不良行为") && !titleStr.contains("措施") && !titleStr.contains("等级")) {
                             handleReasonIndex = i;
                         } else if (titleStr.contains("措施") || titleStr.contains("处理建议")) {
                             handleWayIndex = i;
@@ -521,6 +579,20 @@ public class CrawlerServiceImpl implements CrawlerService{
                             productName = row.getCell(productNameIndex).getStringCellValue();
                         }
 
+                        Date start = new Date();
+                        String startTimePattern = "([0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)[起至到-]";
+                        Pattern startTimeRegex = Pattern.compile(startTimePattern);
+                        Matcher startTimeMatcher = startTimeRegex.matcher(handleWay);
+                        if (startTimeMatcher.find()) {
+                            String startTime = startTimeMatcher.group(1);
+                            DateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+                            try {
+                                start = format.parse(startTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                         cFinalData.setUrl(cOriginFileData.getUrl())
                                 .setSupplier(supplier)
                                 .setPublishTime(cOriginFileData.getDataTime())
@@ -530,6 +602,7 @@ public class CrawlerServiceImpl implements CrawlerService{
                                 .setHandleReason(handleReason)
                                 .setDataType(dataTypeEnum.getType())
                                 .setAnnouncementPublisher(cOriginFileData.getPublisher())
+                                .setStartTime(start)
                                 .setSort(1)
                                 .setSource("FilePage")
                                 .setAddTime(new Date());
@@ -545,9 +618,6 @@ public class CrawlerServiceImpl implements CrawlerService{
 
         }
     }
-
-
-    //endregion
 
     /**
      * 从网络Url中下载文件
@@ -606,6 +676,7 @@ public class CrawlerServiceImpl implements CrawlerService{
         return bos.toByteArray();
     }
 
+    //endregion
 
     public static void main(String[] args) {
 //        crawFilePage("http://ecp.sgcc.com.cn/html/news/018013001/52986.html", "国网青海省电力公司2017年11月供应商不良行为处理情况公示");

@@ -1,6 +1,5 @@
 package cn.com.carry.common.form;
 
-import cn.com.carry.common.validation.annotation.Check;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.Serializable;
@@ -17,7 +16,6 @@ public class BaseIdForm extends BaseForm implements Serializable {
     /**
      * id
      */
-    @Check(numeric = true, minNum = 1)
     private Long id;
 
     public Long getId() {

@@ -10,9 +10,9 @@ public class TentantsRpcServiceStartup {
     private static Logger logger = Logger.getLogger(TentantsRpcServiceStartup.class);
 
     public static void main(String[] args) {
-        logger.info(">>>>> 优加 TENANTS RPC 正在启动 <<<<<");
+        logger.info(">>>>> Carry TENANTS RPC 正在启动 <<<<<");
         Main.main(args);
-        logger.info(">>>>> 优加 TENANTS RPC 启动完成 <<<<<");
+        logger.info(">>>>> Carry TENANTS RPC 启动完成 <<<<<");
     }
 }
 

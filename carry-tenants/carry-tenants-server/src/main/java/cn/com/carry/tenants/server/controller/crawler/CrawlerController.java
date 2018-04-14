@@ -6,6 +6,7 @@ import cn.com.carry.tenants.api.auto.COriginDataPageUrlService;
 import cn.com.carry.tenants.api.auto.COriginDataService;
 import cn.com.carry.tenants.api.auto.CTestService;
 import cn.com.carry.tenants.api.common.CrawlerService;
+import cn.com.carry.tenants.api.common.DataAnalysisService;
 import cn.com.carry.tenants.server.controller.SuperController;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -48,6 +49,9 @@ public class CrawlerController extends SuperController {
 
     @Autowired
     private COriginDataPageUrlService cOriginDataPageUrlService;
+
+    @Autowired
+    private DataAnalysisService dataAnalysisService;
 
     @Autowired
     private CrawlerService crawlerService;
@@ -104,9 +108,17 @@ public class CrawlerController extends SuperController {
 
     @PostMapping("/filterData")
     public BaseResponse filterData() {
-//        crawlerService.filterData();
-//        crawlerService.filterExcelData();
+        crawlerService.filterData();
+        crawlerService.filterExcelData();
         crawlerService.filterFileData();
+
+        return new BaseResponse();
+    }
+
+    @PostMapping("/dataAnalysis")
+    public BaseResponse dataAnalysis() {
+        dataAnalysisService.filterTimeRange();
+        dataAnalysisService.analyseData();
 
         return new BaseResponse();
     }

@@ -38,7 +38,19 @@
 					  interface="cn.com.carry.tenants.api.auto.COriginFileDataService"
 					  version="${dubbo.interface.version}"/>
 
+	<dubbo:service  ref="cAnalyzedDataService"
+					  interface="cn.com.carry.tenants.api.auto.CAnalyzedDataService"
+					  version="${dubbo.interface.version}"/>
+
+	<dubbo:service  ref="cUserRoleService"
+					  interface="cn.com.carry.tenants.api.auto.CUserRoleService"
+					  version="${dubbo.interface.version}"/>
+
 	<dubbo:service  ref="crawlerService"
 					  interface="cn.com.carry.tenants.api.common.CrawlerService"
+					  version="${dubbo.interface.version}"/>
+
+	<dubbo:service  ref="dataAnalysisService"
+					  interface="cn.com.carry.tenants.api.common.DataAnalysisService"
 					  version="${dubbo.interface.version}"/>
 </beans>

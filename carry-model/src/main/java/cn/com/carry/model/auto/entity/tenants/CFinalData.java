@@ -23,6 +23,10 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 	private Long id;
 	@TableField("data_type")
 	private String dataType;
+	@TableField("start_time")
+	private Date startTime;
+	@TableField("end_time")
+	private Date endTime;
 	private String supplier;
 	@TableField("product_name")
 	private String productName;
@@ -36,6 +40,8 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 	private String handleWay;
 	@TableField("time_range")
 	private String timeRange;
+	@TableField("time_month")
+	private Integer timeMonth;
 	@TableField("handle_reason")
 	private String handleReason;
 	private String url;
@@ -60,6 +66,24 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 
 	public CFinalData setDataType(String dataType) {
 		this.dataType = dataType;
+		return this;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public CFinalData setStartTime(Date startTime) {
+		this.startTime = startTime;
+		return this;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public CFinalData setEndTime(Date endTime) {
+		this.endTime = endTime;
 		return this;
 	}
 
@@ -126,6 +150,15 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 		return this;
 	}
 
+	public Integer getTimeMonth() {
+		return timeMonth;
+	}
+
+	public CFinalData setTimeMonth(Integer timeMonth) {
+		this.timeMonth = timeMonth;
+		return this;
+	}
+
 	public String getHandleReason() {
 		return handleReason;
 	}
@@ -175,6 +208,10 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 
 	public static final String DATA_TYPE = "data_type";
 
+	public static final String START_TIME = "start_time";
+
+	public static final String END_TIME = "end_time";
+
 	public static final String SUPPLIER = "supplier";
 
 	public static final String PRODUCT_NAME = "product_name";
@@ -188,6 +225,8 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 	public static final String HANDLE_WAY = "handle_way";
 
 	public static final String TIME_RANGE = "time_range";
+
+	public static final String TIME_MONTH = "time_month";
 
 	public static final String HANDLE_REASON = "handle_reason";
 
@@ -209,6 +248,8 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 		return "CFinalData{" +
 			"id=" + id +
 			", dataType=" + dataType +
+			", startTime=" + startTime +
+			", endTime=" + endTime +
 			", supplier=" + supplier +
 			", productName=" + productName +
 			", productBuyer=" + productBuyer +
@@ -216,6 +257,7 @@ public class CFinalData extends Model<CFinalData> implements Serializable {
 			", publishTime=" + publishTime +
 			", handleWay=" + handleWay +
 			", timeRange=" + timeRange +
+			", timeMonth=" + timeMonth +
 			", handleReason=" + handleReason +
 			", url=" + url +
 			", sort=" + sort +
