@@ -105,7 +105,8 @@ public class CrawlerController extends SuperController {
     @PostMapping("/filterData")
     public BaseResponse filterData() {
 //        crawlerService.filterData();
-        crawlerService.filterExcelData();
+//        crawlerService.filterExcelData();
+        crawlerService.filterFileData();
 
         return new BaseResponse();
     }

@@ -182,6 +182,7 @@ public class AutoGeneratorHelper {
             "c_origin_data",
             "c_origin_excel_data",
             "c_origin_data_page_url",
+            "c_origin_file_data",
     };
 
 

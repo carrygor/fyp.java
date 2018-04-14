@@ -34,6 +34,10 @@
 					  interface="cn.com.carry.tenants.api.auto.COriginExcelDataService"
 					  version="${dubbo.interface.version}"/>
 
+	<dubbo:service  ref="cOriginFileDataService"
+					  interface="cn.com.carry.tenants.api.auto.COriginFileDataService"
+					  version="${dubbo.interface.version}"/>
+
 	<dubbo:service  ref="crawlerService"
 					  interface="cn.com.carry.tenants.api.common.CrawlerService"
 					  version="${dubbo.interface.version}"/>

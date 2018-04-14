@@ -1,18 +1,16 @@
 package cn.com.carry.tenants.rpc.service.common;
 
-import cn.com.carry.model.auto.entity.tenants.CFinalData;
-import cn.com.carry.model.auto.entity.tenants.COriginData;
-import cn.com.carry.model.auto.entity.tenants.COriginDataPageUrl;
-import cn.com.carry.model.auto.entity.tenants.COriginExcelData;
-import cn.com.carry.tenants.api.auto.CFinalDataService;
-import cn.com.carry.tenants.api.auto.COriginDataPageUrlService;
-import cn.com.carry.tenants.api.auto.COriginDataService;
-import cn.com.carry.tenants.api.auto.COriginExcelDataService;
+import cn.com.carry.common.exception.interaction.AlertException;
+import cn.com.carry.model.auto.entity.tenants.*;
+import cn.com.carry.tenants.api.auto.*;
 import cn.com.carry.tenants.api.common.CrawlerService;
 import cn.com.carry.tenants.common.model.enums.FinalDataTypeEnum;
 import cn.com.carry.tenants.common.model.enums.OriginDataStatusEnum;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -48,6 +46,9 @@ public class CrawlerServiceImpl implements CrawlerService{
 
     @Autowired
     private COriginExcelDataService cOriginExcelDataService;
+
+    @Autowired
+    private COriginFileDataService cOriginFileDataService;
 
     //region 获取普通页面
 
@@ -414,8 +415,18 @@ public class CrawlerServiceImpl implements CrawlerService{
             e.printStackTrace();
         }
         Elements links = doc.select(".bot_list a");
+        Element timeElement = doc.select(".articleTitle_details").get(0);
+        String timeStr = timeElement.text();
+        String publisher = "";
+        String publisherPattern = "[^于日月]+公司";
+        Pattern publisherRegex = Pattern.compile(publisherPattern);
+        Matcher publisherMatcher = publisherRegex.matcher(title);
+        if (publisherMatcher.find()) {
+            publisher = publisherMatcher.group(0);
+        }
         for (Element link : links) {
             try {
+
                 String downloadUrl = link.attr("href");
                 String pattern = "[^/]+$";
                 Pattern Regex = Pattern.compile(pattern);
@@ -426,6 +437,14 @@ public class CrawlerServiceImpl implements CrawlerService{
                 }
                 downloadUrl = prefix + downloadUrl;
                 downLoadFromUrl(downloadUrl, name, "D:/FYP/file");
+                COriginFileData fileData = new COriginFileData();
+                fileData.setFileName(name)
+                        .setTitle(title)
+                        .setDataTime(timeStr)
+                        .setPublisher(publisher)
+                        .setUrl(url);
+                fileData.insert();
+
                 flag = true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -433,6 +452,98 @@ public class CrawlerServiceImpl implements CrawlerService{
         }
 
         return flag;
+    }
+
+    @Override
+    public void filterFileData() {
+        String pathName = "D:/FYP/file";
+        File dirFile = new File(pathName);
+        if (!dirFile.exists()) {
+            System.out.println("do not exit");
+            return ;
+        }
+
+        //获取此目录下的所有文件名与目录名
+        String[] fileList = dirFile.list();
+        for (int index = 0; index < fileList.length; index++) {
+
+            logger.info("正在处理第" + (index + 1) + "条table数据，还剩" + (fileList.length - index - 1) + "条");
+            String fileName = fileList[index];
+            File file = new File(dirFile.getPath(),fileName);
+            String name = file.getName();
+            if (name.contains("模板") || name.contains("do")) {
+                continue;
+            }
+            if (file.isFile()) {
+                try {
+                    COriginFileData cOriginFileData = cOriginFileDataService.selectOne(
+                            new EntityWrapper<COriginFileData>()
+                                    .eq(COriginFileData.FILE_NAME, name)
+                    );
+                    if (cOriginFileData == null) {
+                        throw new AlertException("该文件数据库没有记录：" + name);
+                    }
+
+                    InputStream is = new FileInputStream(file);
+                    HSSFWorkbook workbook = new HSSFWorkbook(is);
+                    HSSFSheet sheet = workbook.getSheetAt(0);
+                    HSSFRow titleRow = sheet.getRow(0);
+
+                    FinalDataTypeEnum dataTypeEnum = FinalDataTypeEnum.处罚;
+                    int supplierIndex=-1,handleReasonIndex=-1,handleWayIndex=-1,productNameIndex=-1;
+                    for (int i = 0; i < 12; i++) {
+                        String titleStr = titleRow.getCell(i).getStringCellValue();
+                        if (titleStr.contains("供应商") || titleStr.contains("服务商")) {
+                            supplierIndex = i;
+                        } else if (titleStr.contains("不良行为") && !titleStr.contains("措施")) {
+                            handleReasonIndex = i;
+                        } else if (titleStr.contains("措施") || titleStr.contains("处理建议")) {
+                            handleWayIndex = i;
+                        } else if (titleStr.contains("范围") || titleStr.contains("物资")) {
+                            productNameIndex = i;
+                        }
+                    }
+
+                    for (int i = 1; i < sheet.getLastRowNum(); i++) {
+                        HSSFRow row = sheet.getRow(i);
+                        CFinalData cFinalData = new CFinalData();
+                        String supplier="",handleReason="",handleWay="",productName="";
+                        if (supplierIndex >= 0) {
+                            supplier = row.getCell(supplierIndex).getStringCellValue();
+                        }
+                        if (handleReasonIndex >= 0) {
+                            handleReason = row.getCell(handleReasonIndex).getStringCellValue();
+                        }
+                        if (handleWayIndex >= 0) {
+                            handleWay = row.getCell(handleWayIndex).getStringCellValue();
+                        }
+                        if (productNameIndex >= 0) {
+                            productName = row.getCell(productNameIndex).getStringCellValue();
+                        }
+
+                        cFinalData.setUrl(cOriginFileData.getUrl())
+                                .setSupplier(supplier)
+                                .setPublishTime(cOriginFileData.getDataTime())
+                                .setProductName(productName)
+                                .setProductBuyer(cOriginFileData.getPublisher())
+                                .setHandleWay(handleWay)
+                                .setHandleReason(handleReason)
+                                .setDataType(dataTypeEnum.getType())
+                                .setAnnouncementPublisher(cOriginFileData.getPublisher())
+                                .setSort(1)
+                                .setSource("FilePage")
+                                .setAddTime(new Date());
+
+                        cFinalDataService.insert(cFinalData);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
     }
 
 

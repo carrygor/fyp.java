@@ -14,4 +14,6 @@ public interface CrawlerService {
 
     //region 获取带附件页面data
     void crawFilePageList();
+
+    void filterFileData();
 }
