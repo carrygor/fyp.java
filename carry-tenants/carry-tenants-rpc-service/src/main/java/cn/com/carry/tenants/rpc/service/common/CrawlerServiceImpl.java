@@ -185,7 +185,7 @@ public class CrawlerServiceImpl implements CrawlerService{
                     timeRange = timeRangeMatcher.group();
                 }
 
-                Date start = new Date();
+                Date start = null;
                 String startTimePattern = "([0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)[起至到-]";
                 Pattern startTimeRegex = Pattern.compile(startTimePattern);
                 Matcher startTimeMatcher = startTimeRegex.matcher(text);
@@ -194,6 +194,23 @@ public class CrawlerServiceImpl implements CrawlerService{
                     DateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
                     try {
                         start = format.parse(startTime);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (start == null) {
+                    DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+                    start = format2.parse(originData.getDataTime());
+                }
+                Date end = null;
+                String endTimePattern = "[至到-]([0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)";
+                Pattern endTimeRegex = Pattern.compile(endTimePattern);
+                Matcher endTimeMatcher = endTimeRegex.matcher(handleWay);
+                if (endTimeMatcher.find()) {
+                    String endTime = endTimeMatcher.group(1);
+                    DateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+                    try {
+                        end = format.parse(endTime);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -211,6 +228,10 @@ public class CrawlerServiceImpl implements CrawlerService{
                         .setUrl(originData.getUrl())
                         .setStartTime(start)
                         .setTimeRange(timeRange);
+                if (end != null) {
+                    long m = ( end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 28L);
+                    finalData.setTimeRange(m + "个月");
+                }
 
                 cFinalDataService.insert(finalData);
                 flag = true;
@@ -369,7 +390,7 @@ public class CrawlerServiceImpl implements CrawlerService{
                             productName = tds.get(productNameIndex).text();
                         }
 
-                        Date start = new Date();
+                        Date start = null;
                         String startTimePattern = "([0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)[起至到-]";
                         Pattern startTimeRegex = Pattern.compile(startTimePattern);
                         Matcher startTimeMatcher = startTimeRegex.matcher(handleWay);
@@ -383,8 +404,13 @@ public class CrawlerServiceImpl implements CrawlerService{
                             }
                         }
 
+                        if (start == null) {
+                            DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+                            start = format2.parse(cOriginExcelData.getDataTime());
+                        }
+
                         Date end = null;
-                        String endTimePattern = "[起至到-]([0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)";
+                        String endTimePattern = "[至到-]([0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)";
                         Pattern endTimeRegex = Pattern.compile(endTimePattern);
                         Matcher endTimeMatcher = endTimeRegex.matcher(handleWay);
                         if (endTimeMatcher.find()) {
@@ -579,7 +605,7 @@ public class CrawlerServiceImpl implements CrawlerService{
                             productName = row.getCell(productNameIndex).getStringCellValue();
                         }
 
-                        Date start = new Date();
+                        Date start = null;
                         String startTimePattern = "([0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)[起至到-]";
                         Pattern startTimeRegex = Pattern.compile(startTimePattern);
                         Matcher startTimeMatcher = startTimeRegex.matcher(handleWay);
@@ -588,6 +614,24 @@ public class CrawlerServiceImpl implements CrawlerService{
                             DateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
                             try {
                                 start = format.parse(startTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (start == null) {
+                            DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+                            start = format2.parse(cOriginFileData.getDataTime());
+                        }
+
+                        Date end = null;
+                        String endTimePattern = "[至到-]([0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)";
+                        Pattern endTimeRegex = Pattern.compile(endTimePattern);
+                        Matcher endTimeMatcher = endTimeRegex.matcher(handleWay);
+                        if (endTimeMatcher.find()) {
+                            String endTime = endTimeMatcher.group(1);
+                            DateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+                            try {
+                                end = format.parse(endTime);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -606,6 +650,10 @@ public class CrawlerServiceImpl implements CrawlerService{
                                 .setSort(1)
                                 .setSource("FilePage")
                                 .setAddTime(new Date());
+                        if (end != null) {
+                            long m = ( end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 28L);
+                            cFinalData.setTimeRange(m + "个月");
+                        }
 
                         cFinalDataService.insert(cFinalData);
                     }

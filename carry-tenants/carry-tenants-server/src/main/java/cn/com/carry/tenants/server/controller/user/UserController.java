@@ -11,8 +11,10 @@ import cn.com.carry.common.validation.annotation.Valid;
 import cn.com.carry.model.auto.entity.tenants.CAnalyzedData;
 import cn.com.carry.model.auto.entity.tenants.CFinalData;
 import cn.com.carry.model.auto.entity.tenants.CUser;
+import cn.com.carry.model.auto.entity.tenants.CUserRole;
 import cn.com.carry.tenants.api.auto.CAnalyzedDataService;
 import cn.com.carry.tenants.api.auto.CFinalDataService;
+import cn.com.carry.tenants.api.auto.CUserRoleService;
 import cn.com.carry.tenants.api.auto.CUserService;
 import cn.com.carry.tenants.common.form.KeywordForm;
 import cn.com.carry.tenants.common.form.LoginForm;
@@ -51,6 +53,9 @@ public class UserController extends SuperController {
     private CAnalyzedDataService cAnalyzedDataService;
 
     @Autowired
+    private CUserRoleService cUserRoleService;
+
+    @Autowired
     private HttpServletRequest request;
 
     @Autowired
@@ -80,13 +85,17 @@ public class UserController extends SuperController {
         if (!MD5Util.validPassword(form.getPassword(), user.getSalt(), user.getPassword())) {
             throw new AlertException("密码错误!");
         }
-
         user.setPassword(null)
                 .setSalt(null);
 
         Map<String, Object> result = new HashMap<>();
         result.put("token", AESUtil.AESEncodeForWeb(user.getId().toString()));
         result.put("userInfo", user);
+
+        CUserRole role = cUserRoleService.selectById(user.getUserRoleId());
+        if (role != null) {
+            result.put("routers", role.getRoleCode());
+        }
         response.setData(result);
 
         return response;

@@ -2,6 +2,7 @@ package cn.com.carry.tenants.server.controller.crawler;
 
 import cn.com.carry.common.model.base.BaseResponse;
 import cn.com.carry.model.auto.entity.tenants.COriginDataPageUrl;
+import cn.com.carry.tenants.api.auto.CFinalDataService;
 import cn.com.carry.tenants.api.auto.COriginDataPageUrlService;
 import cn.com.carry.tenants.api.auto.COriginDataService;
 import cn.com.carry.tenants.api.auto.CTestService;
@@ -49,6 +50,9 @@ public class CrawlerController extends SuperController {
 
     @Autowired
     private COriginDataPageUrlService cOriginDataPageUrlService;
+
+    @Autowired
+    private CFinalDataService cFinalDataService;
 
     @Autowired
     private DataAnalysisService dataAnalysisService;
@@ -108,8 +112,8 @@ public class CrawlerController extends SuperController {
 
     @PostMapping("/filterData")
     public BaseResponse filterData() {
-        crawlerService.filterData();
-        crawlerService.filterExcelData();
+//        crawlerService.filterData();
+//        crawlerService.filterExcelData();
         crawlerService.filterFileData();
 
         return new BaseResponse();

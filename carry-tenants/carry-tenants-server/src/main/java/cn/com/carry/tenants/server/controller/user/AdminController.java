@@ -165,8 +165,8 @@ public class AdminController extends SuperController {
                 throw new AlertException("改角色不存在");
             }
             role.setName(form.getName())
-                    .setRoleCode(form.getName());
-            role.updateById();
+                    .setRoleCode(form.getRoleCode());
+            cUserRoleService.updateById(role);
         }
 
         return response;
