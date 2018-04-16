@@ -47,6 +47,10 @@
 					interface="cn.com.carry.tenants.api.auto.CUserRoleService"
 					version="${dubbo.interface.version}"/>
 
+	<dubbo:reference  id="cErrLogService"
+					interface="cn.com.carry.tenants.api.auto.CErrLogService"
+					version="${dubbo.interface.version}"/>
+
 	<dubbo:reference  id="crawlerService"
 					  interface="cn.com.carry.tenants.api.common.CrawlerService"
 					  version="${dubbo.interface.version}"/>

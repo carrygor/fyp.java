@@ -9,6 +9,7 @@ import cn.com.carry.tenants.api.auto.CTestService;
 import cn.com.carry.tenants.api.common.CrawlerService;
 import cn.com.carry.tenants.api.common.DataAnalysisService;
 import cn.com.carry.tenants.server.controller.SuperController;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,7 +74,12 @@ public class CrawlerController extends SuperController {
         BaseResponse response = new BaseResponse();
 
         int pageNum = 49; //49页
+        int linkNum = 0;
+        boolean finish = false;
         for (int i = 1; i <= pageNum; i++) {
+            if (finish) {
+                break;
+            }
             logger.info("crawler mission is running: page" + i );
             String url = listPrefix + i + ".html";
             Document doc = null;
@@ -90,6 +97,15 @@ public class CrawlerController extends SuperController {
                 Matcher matcher = regex.matcher(onClick);
                 if (matcher.find()) {
                     String link =  "http://ecp.sgcc.com.cn/html/news/018013001/" + matcher.group(1) + ".html";
+                    COriginDataPageUrl check = cOriginDataPageUrlService.selectOne(
+                            new EntityWrapper<COriginDataPageUrl>()
+                                    .eq(COriginDataPageUrl.URL, link)
+                    );
+                    if (check != null) {
+                        finish = true;
+                        break;
+                    }
+                    linkNum++;
                     COriginDataPageUrl cOriginDataPageUrl = new COriginDataPageUrl();
                     cOriginDataPageUrl.setFullTitle(title)
                             .setUrl(link);
@@ -97,6 +113,13 @@ public class CrawlerController extends SuperController {
                 }
             }
         }
+        response.setData("共更新到" + linkNum + "个页面，分析数据结束请在10分钟后再进行查询");
+        Executors.newFixedThreadPool(1).submit(new Runnable() {
+            @Override
+            public void run() {
+                crawlerService.newMission();
+            }
+        });
 
         return response;
     }
@@ -112,8 +135,8 @@ public class CrawlerController extends SuperController {
 
     @PostMapping("/filterData")
     public BaseResponse filterData() {
-//        crawlerService.filterData();
-//        crawlerService.filterExcelData();
+        crawlerService.filterData();
+        crawlerService.filterExcelData();
         crawlerService.filterFileData();
 
         return new BaseResponse();
@@ -121,7 +144,7 @@ public class CrawlerController extends SuperController {
 
     @PostMapping("/dataAnalysis")
     public BaseResponse dataAnalysis() {
-        dataAnalysisService.filterTimeRange();
+//        dataAnalysisService.filterTimeRange();
         dataAnalysisService.analyseData();
 
         return new BaseResponse();

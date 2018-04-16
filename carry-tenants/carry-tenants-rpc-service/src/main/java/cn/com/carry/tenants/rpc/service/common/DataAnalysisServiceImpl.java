@@ -148,19 +148,26 @@ public class DataAnalysisServiceImpl implements DataAnalysisService{
                 CAnalyzedData cAnalyzedData = new CAnalyzedData();
 
                 List<Date> timeList = new ArrayList<>();
+                Map<String, Integer> productMap =new HashMap<>();
                 List<CFinalData> cFinalDataList = finalDataMap.get(supplier);
                 for (CFinalData cFinalData : cFinalDataList) {
+                    productMap.put(cFinalData.getProductName(), 1);
                     FinalDataTypeEnum finalDataTypeEnum = FinalDataTypeEnum.valueOf(cFinalData.getDataType());
-                    Date time = cFinalData.getStartTime();
+                    Date startTime = cFinalData.getStartTime();
+                    Date endTime = cFinalData.getEndTime();
                     switch (finalDataTypeEnum) {
                         case 处罚:
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(time);
-                            cal.add(Calendar.MONTH, cFinalData.getTimeMonth());
-                            timeList.add(cal.getTime());
+                            if (endTime != null) {
+                                timeList.add(endTime);
+                            } else {
+                                Calendar cal = Calendar.getInstance();
+                                cal.setTime(startTime);
+                                cal.add(Calendar.MONTH, cFinalData.getTimeMonth());
+                                timeList.add(cal.getTime());
+                            }
                             break;
                         case 解除处罚:
-                            timeList.add(time);
+                            timeList.add(startTime);
                             break;
                         default:
                             break;
@@ -175,8 +182,18 @@ public class DataAnalysisServiceImpl implements DataAnalysisService{
                 }
                 Date now = new Date();
                 if (latestTime.getTime() > now.getTime()) {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    boolean first = true;
+                    for (String productName : productMap.keySet()) {
+                        if (!first) {
+                            stringBuilder.append(",");
+                        } else {
+                            first = false;
+                        }
+                        stringBuilder.append(productName);
+                    }
                     cAnalyzedData.setStatus("处罚")
-                            .setSuggest("该商家还在处罚时间，建议排除中标");
+                            .setSuggest("该商家还在处罚时间，建议排除" + stringBuilder.toString() +"的中标");
                 } else {
                     cAnalyzedData.setStatus("处罚已解除")
                             .setSuggest("该商家有处罚历史，但现在已经解除");
@@ -202,6 +219,10 @@ public class DataAnalysisServiceImpl implements DataAnalysisService{
         try {
             long time1 = formatter.parse(str).getTime();
             long time2 = formatter.parse(str2).getTime();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(formatter.parse(str));
+            cal.add(Calendar.MONTH, 36);
+            Date time3 = cal.getTime();
             long m = ( time1 - time2) / (1000 * 60 * 60 * 24 * 28L);
             int b = 0;
         } catch (ParseException e) {

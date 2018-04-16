@@ -10,6 +10,7 @@
 		<id column="id" property="id" />
 		<result column="supplier" property="supplier" />
 		<result column="status" property="status" />
+		<result column="product_list" property="productList" />
 		<result column="suggest" property="suggest" />
 		<result column="relieve_time" property="relieveTime" />
 		<result column="add_time" property="addTime" />
@@ -17,7 +18,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, supplier, status, suggest, relieve_time AS relieveTime, add_time AS addTime
+        id, supplier, status, product_list AS productList, suggest, relieve_time AS relieveTime, add_time AS addTime
     </sql>
 
 </mapper>

@@ -23,6 +23,8 @@ public class CAnalyzedData extends Model<CAnalyzedData> implements Serializable 
 	private Long id;
 	private String supplier;
 	private String status;
+	@TableField("product_list")
+	private String productList;
 	private String suggest;
 	@TableField("relieve_time")
 	private String relieveTime;
@@ -54,6 +56,15 @@ public class CAnalyzedData extends Model<CAnalyzedData> implements Serializable 
 
 	public CAnalyzedData setStatus(String status) {
 		this.status = status;
+		return this;
+	}
+
+	public String getProductList() {
+		return productList;
+	}
+
+	public CAnalyzedData setProductList(String productList) {
+		this.productList = productList;
 		return this;
 	}
 
@@ -90,6 +101,8 @@ public class CAnalyzedData extends Model<CAnalyzedData> implements Serializable 
 
 	public static final String STATUS = "status";
 
+	public static final String PRODUCT_LIST = "product_list";
+
 	public static final String SUGGEST = "suggest";
 
 	public static final String RELIEVE_TIME = "relieve_time";
@@ -107,6 +120,7 @@ public class CAnalyzedData extends Model<CAnalyzedData> implements Serializable 
 			"id=" + id +
 			", supplier=" + supplier +
 			", status=" + status +
+			", productList=" + productList +
 			", suggest=" + suggest +
 			", relieveTime=" + relieveTime +
 			", addTime=" + addTime +

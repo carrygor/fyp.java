@@ -4,6 +4,7 @@ import cn.com.carry.common.exception.interaction.AlertException;
 import cn.com.carry.model.auto.entity.tenants.*;
 import cn.com.carry.tenants.api.auto.*;
 import cn.com.carry.tenants.api.common.CrawlerService;
+import cn.com.carry.tenants.api.common.DataAnalysisService;
 import cn.com.carry.tenants.common.model.enums.FinalDataTypeEnum;
 import cn.com.carry.tenants.common.model.enums.OriginDataStatusEnum;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -51,7 +52,86 @@ public class CrawlerServiceImpl implements CrawlerService{
     private COriginExcelDataService cOriginExcelDataService;
 
     @Autowired
+    private DataAnalysisService dataAnalysisService;
+
+    @Autowired
     private COriginFileDataService cOriginFileDataService;
+
+    @Autowired
+    private CErrLogService cErrLogService;
+
+
+    @Override
+    public void newMission() {
+
+        try {
+            crawPageList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            CErrLog log1 = new CErrLog();
+            log1.setFunctionName("crawPageList")
+                    .setLog(e.getMessage());
+        }
+        try {
+            crawFilePageList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            CErrLog log1 = new CErrLog();
+            log1.setFunctionName("crawFilePageList")
+                    .setLog(e.getMessage());
+        }
+        try {
+            crawExcelPageList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            CErrLog log1 = new CErrLog();
+            log1.setFunctionName("crawExcelPageList")
+                    .setLog(e.getMessage());
+        }
+        try {
+            filterData();
+        } catch (Exception e) {
+            e.printStackTrace();
+            CErrLog log1 = new CErrLog();
+            log1.setFunctionName("filterData")
+                    .setLog(e.getMessage());
+        }
+        try {
+            filterExcelData();
+        } catch (Exception e) {
+            e.printStackTrace();
+            CErrLog log1 = new CErrLog();
+            log1.setFunctionName("filterExcelData")
+                    .setLog(e.getMessage());
+        }
+        try {
+            filterFileData();
+        } catch (Exception e) {
+            e.printStackTrace();
+            CErrLog log1 = new CErrLog();
+            log1.setFunctionName("filterFileData")
+                    .setLog(e.getMessage());
+        }
+        try {
+            dataAnalysisService.filterTimeRange();
+        } catch (Exception e) {
+            e.printStackTrace();
+            CErrLog log1 = new CErrLog();
+            log1.setFunctionName("dataAnalysisService.filterTimeRange()")
+                    .setLog(e.getMessage());
+        }
+        try {
+            dataAnalysisService.analyseData();
+        } catch (Exception e) {
+            e.printStackTrace();
+            CErrLog log1 = new CErrLog();
+            log1.setFunctionName("dataAnalysisService.analyseData()")
+                    .setLog(e.getMessage());
+        }
+
+
+
+    }
 
     //region 获取普通页面
 
@@ -96,7 +176,7 @@ public class CrawlerServiceImpl implements CrawlerService{
     public void crawPageList() {
         List<COriginDataPageUrl> urlList = cOriginDataPageUrlService.selectList(
                 new EntityWrapper<COriginDataPageUrl>()
-                        .eq(COriginDataPageUrl.STATUS, OriginDataStatusEnum.FAIL.getStatus())
+                        .eq(COriginDataPageUrl.STATUS, OriginDataStatusEnum.CREATE.getStatus())
         );
         int i = 0;
         for (COriginDataPageUrl pageUrl : urlList) {
@@ -551,7 +631,7 @@ public class CrawlerServiceImpl implements CrawlerService{
         String[] fileList = dirFile.list();
         for (int index = 0; index < fileList.length; index++) {
 
-            logger.info("正在处理第" + (index + 1) + "条table数据，还剩" + (fileList.length - index - 1) + "条");
+            logger.info("正在处理第" + (index + 1) + "条file数据，还剩" + (fileList.length - index - 1) + "条");
             String fileName = fileList[index];
             File file = new File(dirFile.getPath(),fileName);
             String name = file.getName();

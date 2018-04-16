@@ -2,6 +2,8 @@ package cn.com.carry.tenants.api.common;
 
 public interface CrawlerService {
 
+    void newMission();
+
     boolean crawPage(String url, String title) throws Exception;
 
     void crawPageList();

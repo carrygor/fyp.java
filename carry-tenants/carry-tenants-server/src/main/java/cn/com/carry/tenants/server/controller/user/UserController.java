@@ -152,6 +152,7 @@ public class UserController extends SuperController {
         CAnalyzedData cAnalyzedData = cAnalyzedDataService.selectOne(
                 new EntityWrapper<CAnalyzedData>()
                         .eq(CAnalyzedData.SUPPLIER, form.getKeyword())
+                        .orderBy(CAnalyzedData.ADD_TIME, false)
         );
 
         List<CFinalData> list = cFinalDataService.selectList(
