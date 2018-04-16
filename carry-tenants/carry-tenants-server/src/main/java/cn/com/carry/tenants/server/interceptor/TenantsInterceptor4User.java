@@ -1,5 +1,7 @@
 package cn.com.carry.tenants.server.interceptor;
 
+import cn.com.carry.common.annotation.Permission;
+import cn.com.carry.common.exception.security.NoPermissionException;
 import cn.com.carry.common.model.base.BaseResponse;
 import cn.com.carry.common.util.AESUtil;
 import cn.com.carry.common.util.Constants;
@@ -7,6 +9,8 @@ import cn.com.carry.common.util.ValueHelper;
 import cn.com.carry.tenants.common.exception.handler.TenantsExceptionHandler;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.log4j.Logger;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -102,51 +106,25 @@ public class TenantsInterceptor4User implements HandlerInterceptor {
             id = ValueHelper.tryParseLong(AESUtil.AESDecodeForWeb(tokenStr), 0L);
         }
 
-//        UpTenantsUser tenantsUser = null;
-//        UpTenantsCompany tenantsCompany = null;
-//        if (id > 0) {
-//            if (id > 0) {
-//                tenantsUser = getUpTenantsUserService(request).selectById(id);
-//                if (tenantsUser != null) {
-//                    tenantsCompany = getUpTenantsCompanyService(request).selectById(tenantsUser.getTenantsCompanyId());
-//                }
-//            }
-//
-//            request.setAttribute(Constants.REQUEST_TENANTS_COMPANY_KEY, tenantsCompany);
-//            request.setAttribute(Constants.REQUEST_TENANTS_USER_KEY, tenantsUser);
-//        }
-//        Permission permission = methodHandle.getMethodAnnotation(Permission.class);
-//        if (permission != null) {
-//
-//            if (tenantsUser == null) {
-//                throw new OauthFailedException("用户信息验证失败!");
-//            }
-//            String function = permission.function();
-//            Object object = request.getAttribute(Constants.TENANTS_SUBJECT_KEY);
-//            Subject subject = (Subject) object;
-//
-//            if (!ValueHelper.isNone(function)) {
-//                if (subject != null) {
-//                    try {
-//                        subject.checkPermission(Constants.TENANTS_FUNCTION_PREFIX + function);
-//                    } catch (AuthorizationException e) {
-//                        throw new NoFunctionException("您还没有开通:[" + function + "]");
-//                    }
-//                }
-//            }
-//
-//            String permissionValue = permission.value();
-//
-//            if (!ValueHelper.isNone(permissionValue)) {
-//                if (subject != null) {
-//                    try {
-//                        subject.checkPermission(permissionValue);
-//                    } catch (AuthorizationException e) {
-//                        throw new NoPermissionException("您无权访问该资源!");
-//                    }
-//                }
-//            }
-//        }
+        Permission permission = methodHandle.getMethodAnnotation(Permission.class);
+        if (permission != null) {
+
+            String function = permission.function();
+            Object object = request.getAttribute(Constants.TENANTS_SUBJECT_KEY);
+            Subject subject = (Subject) object;
+
+            String permissionValue = permission.value();
+
+            if (!ValueHelper.isNone(permissionValue)) {
+                if (subject != null) {
+                    try {
+                        subject.checkPermission(permissionValue);
+                    } catch (AuthorizationException e) {
+                        throw new NoPermissionException("您无权访问该资源!");
+                    }
+                }
+            }
+        }
     }
 
     @Override

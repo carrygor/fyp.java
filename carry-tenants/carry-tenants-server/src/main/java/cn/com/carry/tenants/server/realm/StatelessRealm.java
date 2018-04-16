@@ -2,6 +2,12 @@ package cn.com.carry.tenants.server.realm;
 
 import cn.com.carry.common.util.Constants;
 import cn.com.carry.common.util.MD5Util;
+import cn.com.carry.model.auto.entity.tenants.CUser;
+import cn.com.carry.model.auto.entity.tenants.CUserRole;
+import cn.com.carry.tenants.api.auto.CUserRoleService;
+import cn.com.carry.tenants.api.auto.CUserService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -9,8 +15,10 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +32,11 @@ import java.util.Set;
  */
 public class StatelessRealm extends AuthorizingRealm {
 
+    @Autowired
+    private CUserService cUserService;
 
-//    @Autowired
-//    private UpTenantsUserRoleService upTenantsUserRoleService;
-//
-//    @Autowired
-//    private UpTenantsUserService upTenantsUserService;
-//
-//    @Autowired
-//    private UpTenantsCompanyService upTenantsCompanyService;
+    @Autowired
+    private CUserRoleService cUserRoleService;
 
 
     private static Logger logger = Logger.getLogger(StatelessRealm.class);
@@ -46,32 +50,21 @@ public class StatelessRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         //根据用户名查找角色，请根据需求实现
         String userId = (String) principals.getPrimaryPrincipal();
+        CUser user = cUserService.selectById(Long.parseLong(userId));
+        CUserRole role = cUserRoleService.selectById(user.getUserRoleId());
 
-//        UpTenantsUser user = upTenantsUserService.selectById(userId);
-//        UpTenantsCompany company = upTenantsCompanyService.selectById(user.getTenantsCompanyId());
-//        UpTenantsUserRole role = upTenantsUserRoleService.selectOne(
-//                new EntityWrapper<UpTenantsUserRole>()
-//                        .eq(UpTenantsUserRole.ROLE_CODE, user.getRoleCode())
-//        );
 
         SimpleAuthorizationInfo authorizationInfo =  new SimpleAuthorizationInfo();
-//        if (role != null) {
-//            authorizationInfo.addRole(role.getRoleName());
-//        }
-//
-//        ResourcesPermissionList resourcesPermissionList = new ResourcesPermissionList(role.getPermissionJson());
-//        List<StringBuilder> permissionList = resourcesPermissionList.toStringPermission();
-//        for (StringBuilder stringBuilder: permissionList) {
-//            WildcardPermission wildcardPermission = new WildcardPermission(stringBuilder.toString());
-//            authorizationInfo.addObjectPermission(wildcardPermission);
-//        }
-//
-//        FunctionList functionList = new FunctionList(company.getFunctionStr());
-//        List<StringBuilder> functionStrList = functionList.toStringPermission();
-//        for (StringBuilder stringBuilder1: functionStrList) {
-//            WildcardPermission wildcardPermission = new WildcardPermission(Constants.TENANTS_FUNCTION_PREFIX + stringBuilder1.toString());
-//            authorizationInfo.addObjectPermission(wildcardPermission);
-//        }
+        if (role != null) {
+            authorizationInfo.addRole(role.getName());
+        }
+
+        String authArrStr = role.getRoleCode();
+        JSONArray authArr = JSON.parseArray(authArrStr);
+        for (Object object : authArr) {
+            WildcardPermission wildcardPermission = new WildcardPermission(object.toString());
+            authorizationInfo.addObjectPermission(wildcardPermission);
+        }
 
         return authorizationInfo;
     }

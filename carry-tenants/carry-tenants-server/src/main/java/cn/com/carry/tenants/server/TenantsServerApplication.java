@@ -20,9 +20,9 @@ public class TenantsServerApplication extends BaseWebMvcConfigurerAdapter {
     private static Logger logger = Logger.getLogger(TenantsServerApplication.class);
 
     static public void main(String [] args) {
-        logger.info(">>>>> Youplus TENANTS Server 正在启动 <<<<<");
+        logger.info(">>>>> Carry TENANTS Server 正在启动 <<<<<");
         SpringApplication.run(TenantsServerApplication.class,args);
-        logger.info(">>>>> Youplus TENANTS Server 启动完成 <<<<<");
+        logger.info(">>>>> Carry TENANTS Server 启动完成 <<<<<");
     }
 
     /**

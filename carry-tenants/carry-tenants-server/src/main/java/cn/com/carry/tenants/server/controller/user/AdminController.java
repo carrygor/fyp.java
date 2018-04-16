@@ -1,5 +1,6 @@
 package cn.com.carry.tenants.server.controller.user;
 
+import cn.com.carry.common.annotation.Permission;
 import cn.com.carry.common.exception.interaction.AlertException;
 import cn.com.carry.common.form.BaseIdForm;
 import cn.com.carry.common.form.BasePageForm;
@@ -67,6 +68,7 @@ public class AdminController extends SuperController {
     }
     //endregion
 
+    @Permission(value = "系统管理")
     @PostMapping("/user/save")
     public BaseResponse userSave(LoginForm form) throws AlertException {
         BaseResponse response = new BaseResponse();
@@ -114,6 +116,7 @@ public class AdminController extends SuperController {
         return response;
     }
 
+    @Permission(value = "系统管理")
     @PostMapping("/user/list")
     public BaseResponse userSave(BasePageForm form) throws AlertException {
         BaseResponse response = new BaseResponse();
@@ -141,6 +144,7 @@ public class AdminController extends SuperController {
         return response;
     }
 
+    @Permission(value = "系统管理")
     @PostMapping("/user/delete")
     public BaseResponse userDelete(BaseIdForm form) throws AlertException {
         BaseResponse response = new BaseResponse();
@@ -150,6 +154,7 @@ public class AdminController extends SuperController {
         return response;
     }
 
+    @Permission(value = "系统管理")
     @PostMapping("/role/save")
     public BaseResponse userSave(RoleEditForm form) throws AlertException {
         BaseResponse response = new BaseResponse();
@@ -172,6 +177,7 @@ public class AdminController extends SuperController {
         return response;
     }
 
+    @Permission(value = "系统管理")
     @PostMapping("/role/list")
     public BaseResponse roleSave(BasePageForm form) throws AlertException {
         BaseResponse response = new BaseResponse();
@@ -185,6 +191,7 @@ public class AdminController extends SuperController {
         return response;
     }
 
+    @Permission(value = "系统管理")
     @PostMapping("/role/delete")
     public BaseResponse roleDelete(BaseIdForm form) throws AlertException {
         BaseResponse response = new BaseResponse();

@@ -1,5 +1,6 @@
 package cn.com.carry.tenants.server.controller.user;
 
+import cn.com.carry.common.annotation.Permission;
 import cn.com.carry.common.exception.interaction.AlertException;
 import cn.com.carry.common.form.BasePageForm;
 import cn.com.carry.common.model.base.BaseResponse;
@@ -125,6 +126,7 @@ public class UserController extends SuperController {
         return response;
     }
 
+    @Permission(value = "数据展示")
     @PostMapping("/finalData/get")
     public BaseResponse finalDataGet(BasePageForm form) {
         BaseResponse response = new BaseResponse();
@@ -146,6 +148,7 @@ public class UserController extends SuperController {
         return response;
     }
 
+    @Permission(value = "数据展示")
     @PostMapping("/analyzed/get")
     public BaseResponse analyzedGet(KeywordForm form) {
         BaseResponse response = new BaseResponse();
